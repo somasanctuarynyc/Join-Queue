@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Check My Time — SOMA Sanctuary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Exo+2:wght@400;500;600&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/brand/lockup-square.png" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="spine" aria-hidden="true"></div>
+  <main class="wrap">
+    <header class="masthead">
+      <img class="mark" src="/brand/lockup-square.png" alt="" />
+      <div>
+        <img class="wordmark" src="/brand/wordmark.png" alt="SOMA Sanctuary" />
+        <p class="tagline">Release · Restore · Return</p>
+        <a class="site" href="https://www.somasanctuary.nyc" target="_blank" rel="noreferrer">www.somasanctuary.nyc</a>
+      </div>
+    </header>
+    <p class="product">SOMA Sanctuary · JTQ</p>
+    <h1>Check My Time</h1>
+    <p class="lede">Enter the phone number you used when you joined. This is the current estimate, not the original one.</p>
+    <form class="card" id="check-form">
+      <label for="phone">Phone</label>
+      <input id="phone" inputmode="tel" autocomplete="tel" required />
+      <div class="actions">
+        <button type="submit">See my time</button>
+      </div>
+      <p class="err hidden" id="error"></p>
+    </form>
+    <div class="result hidden" id="result">
+      <p id="result-msg"></p>
+      <p class="time" id="result-time"></p>
+    </div>
+    <nav class="nav">
+      <a href="/join">Join The Queue</a>
+    </nav>
+  </main>
+  <script>
+    document.getElementById("check-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const errorEl = document.getElementById("error");
+      const result = document.getElementById("result");
+      errorEl.classList.add("hidden");
+      result.classList.add("hidden");
+      const phone = encodeURIComponent(document.getElementById("phone").value);
+      const res = await fetch(`/api/check?phone=${phone}`);
+      const data = await res.json();
+      if (!res.ok) {
+        errorEl.textContent = data.error || "Not found.";
+        errorEl.classList.remove("hidden");
+        return;
+      }
+      document.getElementById("result-msg").textContent = data.message;
+      document.getElementById("result-time").textContent = data.return_label || "";
+      result.classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>
