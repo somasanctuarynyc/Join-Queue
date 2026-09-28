@@ -377,11 +377,6 @@ button.film-start.hidden,
   width: 100%;
   height: auto;
 }
-.look-frame.look-portrait {
-  max-width: min(28rem, 100%);
-  margin-left: auto;
-  margin-right: auto;
-}
 .look-frame figcaption {
   margin: 0;
   padding: 9px 12px 11px;
