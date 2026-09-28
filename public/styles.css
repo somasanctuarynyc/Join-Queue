@@ -159,6 +159,16 @@ option { background: #041018; color: var(--ink); }
   font-size: 0.78rem;
 }
 .intent { margin: 10px 0 0; }
+.bio {
+  margin: 14px 0 0;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.bio a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+.bio a:hover { text-decoration: underline; }
 
 .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 button, a.cta {
