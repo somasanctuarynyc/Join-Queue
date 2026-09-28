@@ -53,10 +53,23 @@ def load_dotenv() -> None:
 load_dotenv()
 
 HOST = os.environ.get("JTQ_HOST", "0.0.0.0")
-PORT = int(os.environ.get("JTQ_PORT", "8765"))
+PORT = int(os.environ.get("PORT") or os.environ.get("JTQ_PORT", "8765"))
 ADMIN_PASSWORD = os.environ.get("JTQ_ADMIN_PASSWORD", "sanctuary")
 CLOSE_HOUR = int(os.environ.get("JTQ_CLOSE_HOUR", "21"))
 SESSION_TTL = 12 * 60 * 60
+
+
+def public_mode() -> bool:
+    flag = os.environ.get("JTQ_PUBLIC", "").strip().lower()
+    if flag in ("1", "true", "yes"):
+        return True
+    if flag in ("0", "false", "no"):
+        return False
+    return bool(
+        os.environ.get("RENDER")
+        or os.environ.get("RAILWAY_ENVIRONMENT")
+        or os.environ.get("FLY_APP_NAME")
+    )
 
 store = QueueStore()
 sessions: dict[str, float] = {}
@@ -137,6 +150,21 @@ class Handler(SimpleHTTPRequestHandler):
         morsel = cookie.get("jtq_admin")
         return morsel.value if morsel else None
 
+    def _secure_cookie(self) -> bool:
+        proto = (self.headers.get("X-Forwarded-Proto") or "").split(",")[0].strip().lower()
+        if proto == "https":
+            return True
+        return os.environ.get("JTQ_SECURE_COOKIES", "").strip().lower() in ("1", "true", "yes")
+
+    def _admin_cookie(self, token: str | None) -> str:
+        if token:
+            parts = [f"jtq_admin={token}", "Path=/", "HttpOnly", "SameSite=Lax", f"Max-Age={SESSION_TTL}"]
+        else:
+            parts = ["jtq_admin=", "Path=/", "HttpOnly", "Max-Age=0"]
+        if self._secure_cookie():
+            parts.append("Secure")
+        return "; ".join(parts)
+
     def _json_body(self) -> dict:
         length = int(self.headers.get("Content-Length", "0") or 0)
         raw = self.rfile.read(length) if length else b"{}"
@@ -168,6 +196,7 @@ class Handler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path.rstrip("/") or "/"
         routes = {
+            "/api/health": self.api_health,
             "/api/meta": self.api_meta,
             "/api/check": self.api_check,
             "/api/display": self.api_display,
@@ -207,6 +236,9 @@ class Handler(SimpleHTTPRequestHandler):
             handler()
         except json.JSONDecodeError:
             self._error(400, "Invalid JSON.")
+
+    def api_health(self) -> None:
+        self._send(200, {"ok": True, "service": "jtq"})
 
     def api_meta(self) -> None:
         self._send(
@@ -377,13 +409,11 @@ class Handler(SimpleHTTPRequestHandler):
             self._error(401, "That password didn't match.")
             return
         token = new_session()
-        cookie = f"jtq_admin={token}; Path=/; HttpOnly; SameSite=Lax; Max-Age={SESSION_TTL}"
-        self._send(200, {"ok": True}, [("Set-Cookie", cookie)])
+        self._send(200, {"ok": True}, [("Set-Cookie", self._admin_cookie(token))])
 
     def api_logout(self) -> None:
         drop_session(self._session_token())
-        cookie = "jtq_admin=; Path=/; HttpOnly; Max-Age=0"
-        self._send(200, {"ok": True}, [("Set-Cookie", cookie)])
+        self._send(200, {"ok": True}, [("Set-Cookie", self._admin_cookie(None))])
 
     def api_done(self) -> None:
         if not self._require_admin():
@@ -489,18 +519,28 @@ def auto_close_loop() -> None:
 
 
 def main() -> None:
+    if public_mode() and ADMIN_PASSWORD == "sanctuary":
+        raise SystemExit(
+            "Refusing to start on the public internet with the default admin password. "
+            "Set JTQ_ADMIN_PASSWORD in the host dashboard (do not put it in git)."
+        )
     PUBLIC.mkdir(exist_ok=True)
     threading.Thread(target=auto_close_loop, daemon=True).start()
     server = ThreadingHTTPServer((HOST, PORT), Handler)
-    ip = lan_hint()
     print("SOMA Sanctuary — Join The Queue (JTQ)")
-    print(f"  Local:  http://127.0.0.1:{PORT}/join")
-    print(f"  LAN:    http://{ip}:{PORT}/join")
-    print(f"  Check:  http://127.0.0.1:{PORT}/check")
-    print(f"  Board:  http://127.0.0.1:{PORT}/display")
-    print(f"  Admin:  http://127.0.0.1:{PORT}/admin")
-    print(f"  Admin password: {ADMIN_PASSWORD}  (change with JTQ_ADMIN_PASSWORD)")
-    print("  End-of-day email: somasanctuarynyc@gmail.com (set JTQ_SMTP_PASS to a Gmail app password)")
+    print(f"  Listening on {HOST}:{PORT}")
+    if public_mode():
+        print("  Public Join/Check/Display are open. Admin stays cookie-protected.")
+        print("  Admin password is set via JTQ_ADMIN_PASSWORD (not printed).")
+    else:
+        ip = lan_hint()
+        print(f"  Local:  http://127.0.0.1:{PORT}/join")
+        print(f"  LAN:    http://{ip}:{PORT}/join")
+        print(f"  Check:  http://127.0.0.1:{PORT}/check")
+        print(f"  Board:  http://127.0.0.1:{PORT}/display")
+        print(f"  Admin:  http://127.0.0.1:{PORT}/admin")
+        print(f"  Admin password: {ADMIN_PASSWORD}  (change with JTQ_ADMIN_PASSWORD)")
+    print("  End-of-day email: somasanctuarynyc@gmail.com (set JTQ_SMTP_PASS only on the host, never in git)")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

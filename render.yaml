@@ -1,0 +1,39 @@
+# Render Blueprint — https://dashboard.render.com/blueprints
+# Connect GitHub repo somasanctuarynyc/Join-Queue, then apply this file.
+# Set JTQ_ADMIN_PASSWORD in the dashboard (auto-generated below).
+# Set JTQ_SMTP_PASS in the dashboard only if you want end-of-day email. Never commit it.
+
+services:
+  - type: web
+    name: join-queue
+    runtime: python
+    plan: free
+    region: ohio
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: JTQ_HOST
+        value: "0.0.0.0"
+      - key: JTQ_PUBLIC
+        value: "1"
+      - key: JTQ_SECURE_COOKIES
+        value: "1"
+      - key: JTQ_ADMIN_PASSWORD
+        generateValue: true
+      - key: JTQ_ADMIN_EMAIL
+        value: somasanctuarynyc@gmail.com
+      - key: JTQ_FROM_EMAIL
+        value: somasanctuarynyc@gmail.com
+      - key: JTQ_SMTP_HOST
+        value: smtp.gmail.com
+      - key: JTQ_SMTP_PORT
+        value: "587"
+      - key: JTQ_SMTP_USER
+        value: somasanctuarynyc@gmail.com
+      - key: JTQ_SMTP_PASS
+        sync: false
+      - key: JTQ_CLOSE_HOUR
+        value: "21"

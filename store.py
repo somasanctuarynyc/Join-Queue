@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import threading
 import uuid
 from datetime import datetime
@@ -20,7 +21,28 @@ TZ = ZoneInfo("America/New_York")
 SESSION_OPTIONS = (5, 10, 15, 20)
 PAYMENT_OPTIONS = ("Cash", "Card", "Venmo", "Zelle", "Other")
 
-DATA_DIR = Path(__file__).resolve().parent / "data"
+
+def _load_dotenv() -> None:
+    path = Path(__file__).resolve().parent / ".env"
+    if not path.exists():
+        return
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
+_load_dotenv()
+
+
+def _data_dir() -> Path:
+    override = os.environ.get("JTQ_DATA_DIR", "").strip()
+    return Path(override) if override else Path(__file__).resolve().parent / "data"
+
+
+DATA_DIR = _data_dir()
 DATA_FILE = DATA_DIR / "queue.json"
 ARCHIVE_DIR = DATA_DIR / "archive"
 

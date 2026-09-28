@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JTQ Admin — SOMA Sanctuary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Exo+2:wght@400;500;600&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/brand/lockup-square.png" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="wrap wide">
+    <header class="masthead">
+      <img class="mark" src="/brand/lockup-square.png" alt="" />
+      <div>
+        <img class="wordmark" src="/brand/wordmark.png" alt="SOMA Sanctuary" />
+        <p class="tagline">Release · Restore · Return</p>
+        <a class="site" href="https://www.somasanctuary.nyc" target="_blank" rel="noreferrer">www.somasanctuary.nyc</a>
+      </div>
+    </header>
+    <p class="product">SOMA Sanctuary · JTQ admin</p>
+    <h1>Today’s queue</h1>
+    <p class="lede">Mark people Done as soon as a session ends, and Remove no-shows. Estimates only stay honest if this list does.</p>
+
+    <section class="card login" id="login-card">
+      <form id="login-form">
+        <label for="password">Admin password</label>
+        <input id="password" type="password" autocomplete="current-password" />
+        <div class="actions">
+          <button type="submit" id="login-btn">Sign in</button>
+        </div>
+      </form>
+      <p class="err hidden" id="login-error"></p>
+      <p class="muted">Use the password from JTQ_ADMIN_PASSWORD (local .env, or the Render dashboard for the public site). Never put that value in git.</p>
+    </section>
+
+    <section id="desk" class="hidden">
+      <div class="toolbar">
+        <p class="muted" id="day-label"></p>
+        <div class="actions">
+          <a class="nav" href="/display" style="margin:0" target="_blank" rel="noreferrer">Open display</a>
+          <button type="button" class="secondary" id="toggle-display">Public display</button>
+          <button type="button" class="secondary" id="end-day">End day &amp; email list</button>
+          <button type="button" class="secondary" id="logout">Sign out</button>
+        </div>
+      </div>
+      <p class="err hidden" id="desk-msg"></p>
+      <div class="card">
+        <h2>Waiting</h2>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Session</th>
+                <th>Pay</th>
+                <th>Return around</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="waiting-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h2>Seen / not seen today</h2>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Payment</th>
+              </tr>
+            </thead>
+            <tbody id="other-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const loginCard = document.getElementById("login-card");
+    const desk = document.getElementById("desk");
+    const loginError = document.getElementById("login-error");
+    const deskMsg = document.getElementById("desk-msg");
+
+    function showMsg(text) {
+      deskMsg.textContent = text;
+      deskMsg.classList.toggle("hidden", !text);
+    }
+
+    async function loadQueue() {
+      const res = await fetch("/api/admin/queue");
+      if (res.status === 401) {
+        loginCard.classList.remove("hidden");
+        desk.classList.add("hidden");
+        return;
+      }
+      const data = await res.json();
+      loginCard.classList.add("hidden");
+      desk.classList.remove("hidden");
+      document.getElementById("day-label").textContent = data.email_configured
+        ? `Business day ${data.day} · refreshes every 15 seconds · end-of-day list emails ${data.email_to}`
+        : `Business day ${data.day} · refreshes every 15 seconds · list will email ${data.email_to} after you add JTQ_SMTP_PASS`;
+      document.getElementById("toggle-display").textContent = data.display_enabled
+        ? "Public display: on"
+        : "Public display: off";
+      document.getElementById("waiting-body").innerHTML = data.waiting.map((c) => `
+        <tr>
+          <td>${escapeHtml(c.name)}</td>
+          <td>${escapeHtml(c.phone_display || c.phone)}</td>
+          <td>${c.session_minutes} min</td>
+          <td>${escapeHtml(c.payment)}</td>
+          <td>${escapeHtml(c.return_label || "")}</td>
+          <td class="row-actions">
+            <button data-act="done" data-id="${c.id}">Done</button>
+            <button class="secondary" data-act="remove" data-id="${c.id}">Remove</button>
+          </td>
+        </tr>
+      `).join("") || `<tr><td colspan="6" class="muted">No one waiting.</td></tr>`;
+      document.getElementById("other-body").innerHTML = data.others.map((c) => `
+        <tr>
+          <td>${escapeHtml(c.name)}</td>
+          <td>${escapeHtml(c.phone_display || c.phone)}</td>
+          <td>${c.status === "done" ? "Seen" : "Not seen"}</td>
+          <td>${escapeHtml(c.payment)}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="4" class="muted">No finished or removed clients yet.</td></tr>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (ch) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[ch]));
+    }
+
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginError.classList.add("hidden");
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: document.getElementById("password").value }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        loginError.textContent = data.error;
+        loginError.classList.remove("hidden");
+        return;
+      }
+      await loadQueue();
+    });
+
+    document.getElementById("logout").addEventListener("click", async () => {
+      await fetch("/api/admin/logout", { method: "POST" });
+      await loadQueue();
+    });
+
+    document.getElementById("toggle-display").addEventListener("click", async () => {
+      const res = await fetch("/api/admin/queue");
+      const data = await res.json();
+      await fetch("/api/admin/display", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enabled: !data.display_enabled }),
+      });
+      await loadQueue();
+    });
+
+    document.getElementById("end-day").addEventListener("click", async () => {
+      if (!confirm("Email today’s full name + phone list, then clear the live queue?")) return;
+      const res = await fetch("/api/admin/end-day", { method: "POST" });
+      const data = await res.json();
+      showMsg(data.emailed ? data.detail : `Queue archived. Email not sent: ${data.detail}`);
+      await loadQueue();
+    });
+
+    document.getElementById("desk").addEventListener("click", async (e) => {
+      const btn = e.target.closest("button[data-act]");
+      if (!btn) return;
+      const act = btn.dataset.act;
+      const path = act === "done" ? "/api/admin/done" : "/api/admin/remove";
+      await fetch(path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: btn.dataset.id }),
+      });
+      await loadQueue();
+    });
+
+    loadQueue();
+    setInterval(loadQueue, 15000);
+  </script>
+</body>
+</html>

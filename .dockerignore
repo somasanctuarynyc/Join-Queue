@@ -1,0 +1,9 @@
+.git
+.gitignore
+data
+.env
+__pycache__
+*.pyc
+.DS_Store
+test_wait.py
+start-jtq.bat
