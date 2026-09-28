@@ -36,6 +36,27 @@ from store import (
 
 ROOT = Path(__file__).resolve().parent
 PUBLIC = ROOT / "public"
+_VIDEO_EXTS = {".mp4", ".webm", ".mov", ".m4v"}
+_FILM_NAMES = ("soma-session.mp4", "soma-session.webm", "soma-session.mov", "soma-session.m4v")
+
+
+def session_film() -> str | None:
+    brand = PUBLIC / "brand"
+    if not brand.is_dir():
+        return None
+    for name in _FILM_NAMES:
+        path = brand / name
+        if path.is_file() and path.stat().st_size > 0:
+            return f"/brand/{name}"
+    extras = [
+        path
+        for path in brand.iterdir()
+        if path.is_file() and path.suffix.lower() in _VIDEO_EXTS and path.stat().st_size > 0
+    ]
+    extras.sort(key=lambda path: path.name.lower())
+    if extras:
+        return f"/brand/{extras[0].name}"
+    return None
 
 
 def load_dotenv() -> None:
@@ -211,6 +232,8 @@ class Handler(SimpleHTTPRequestHandler):
             "/check": "/check.html",
             "/display": "/display.html",
             "/admin": "/admin.html",
+            "/bookings": "/bookings.html",
+            "/book": "/bookings.html",
         }
         if path in aliases:
             self.path = aliases[path]
@@ -252,6 +275,7 @@ class Handler(SimpleHTTPRequestHandler):
                 "payments": list(PAYMENT_OPTIONS),
                 "buffer_minutes": 5,
                 "price_per_minute": PRICE_PER_MINUTE,
+                "session_film": session_film(),
             },
         )
 
@@ -538,6 +562,7 @@ def main() -> None:
         print(f"  LAN:    http://{ip}:{PORT}/join")
         print(f"  Check:  http://127.0.0.1:{PORT}/check")
         print(f"  Board:  http://127.0.0.1:{PORT}/display")
+        print(f"  Book:   http://127.0.0.1:{PORT}/bookings")
         print(f"  Admin:  http://127.0.0.1:{PORT}/admin")
         print(f"  Admin password: {ADMIN_PASSWORD}  (change with JTQ_ADMIN_PASSWORD)")
     print("  End-of-day email: somasanctuarynyc@gmail.com (set JTQ_SMTP_PASS only on the host, never in git)")
