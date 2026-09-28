@@ -60,12 +60,21 @@ body {
   gap: 18px;
   margin: 0 0 22px;
 }
+.brand-mark {
+  display: block;
+  flex: 0 0 auto;
+  line-height: 0;
+}
 .mark {
   width: 86px;
   height: 86px;
   object-fit: contain;
-  flex: 0 0 auto;
   filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.35));
+}
+.brand-wordmark {
+  display: block;
+  width: fit-content;
+  line-height: 0;
 }
 .wordmark {
   display: block;
@@ -376,13 +385,6 @@ button.film-start.hidden,
   margin: 0 0 16px;
 }
 .look-spread .look-frame { margin: 0; }
-.look-signs {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin: 0 0 10px;
-}
-.look-signs .look-frame { margin: 0; }
 .look-note {
   margin: 0;
   font-family: var(--font-display);
@@ -399,6 +401,5 @@ button.film-start.hidden,
   .spine { display: none; }
   .masthead { align-items: flex-start; }
   .mark { width: 64px; height: 64px; }
-  .look-spread,
-  .look-signs { grid-template-columns: 1fr; }
+  .look-spread { grid-template-columns: 1fr; }
 }
