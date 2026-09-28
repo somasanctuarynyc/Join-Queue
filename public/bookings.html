@@ -26,14 +26,18 @@
     <p class="lede">SOMA Sanctuary is a New York sanctuary. The work is release, restore, and return.</p>
     <figure class="film">
       <div class="film-frame">
-        <video id="session-film" class="hidden" controls playsinline preload="metadata"></video>
-        <div class="film-slot" id="film-slot">
-          <span class="film-play" aria-hidden="true"></span>
-          <p class="muted">The session film goes here.</p>
-        </div>
-        <button type="button" class="film-start hidden" id="film-start" aria-label="Play session film">
-          <span class="film-play" aria-hidden="true"></span>
-        </button>
+        <!-- Temporary session film. Replace /brand/soma-session.mp4 after recut clips land in /brand/clips. -->
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          controls
+          preload="auto"
+          src="/brand/soma-session.mp4"
+        >
+          Your browser does not support the session film.
+        </video>
       </div>
     </figure>
     <div class="card">
@@ -47,76 +51,5 @@
       <a href="/join">Join The Queue</a>
     </nav>
   </main>
-  <script>
-    const video = document.getElementById("session-film");
-    const slot = document.getElementById("film-slot");
-    const start = document.getElementById("film-start");
-    const candidates = [
-      "/brand/soma-session.mp4",
-      "/brand/soma-session.webm",
-      "/brand/soma-session.mov",
-      "/brand/soma-session.m4v",
-    ];
-
-    let failed = false;
-
-    function keepSlot() {
-      video.classList.add("hidden");
-      start.classList.add("hidden");
-      slot.classList.remove("hidden");
-    }
-
-    function showFilm(url) {
-      failed = false;
-      slot.classList.add("hidden");
-      video.classList.remove("hidden");
-      start.classList.remove("hidden");
-      video.src = url;
-    }
-
-    async function probe(url) {
-      try {
-        const res = await fetch(url, { method: "HEAD" });
-        return res.ok;
-      } catch {
-        return false;
-      }
-    }
-
-    async function bootFilm() {
-      let url = null;
-      try {
-        const meta = await fetch("/api/meta").then((r) => r.json());
-        if (meta.session_film) url = meta.session_film;
-      } catch {
-        /* use file probes */
-      }
-      if (!url) {
-        for (const candidate of candidates) {
-          if (await probe(candidate)) {
-            url = candidate;
-            break;
-          }
-        }
-      }
-      if (!url) {
-        keepSlot();
-        return;
-      }
-      showFilm(url);
-    }
-
-    start.addEventListener("click", () => {
-      start.classList.add("hidden");
-      video.play();
-    });
-    video.addEventListener("play", () => start.classList.add("hidden"));
-    video.addEventListener("error", () => {
-      if (failed) return;
-      failed = true;
-      keepSlot();
-    });
-    bootFilm();
-  </script>
 </body>
 </html>
