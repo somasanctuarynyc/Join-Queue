@@ -333,10 +333,72 @@ button.film-start.hidden,
   display: none;
 }
 
+.wrap.bookings { width: min(880px, calc(100% - 32px)); }
+
+.lookbook { margin: 4px 0 32px; }
+.lookbook h2 {
+  color: var(--cyan);
+  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  margin: 0 0 8px;
+}
+.lookbook-lede {
+  margin: 0 0 18px;
+  max-width: 38rem;
+}
+.look-frame {
+  margin: 0 0 16px;
+  border: 1px solid var(--line);
+  background: #000;
+  overflow: hidden;
+  box-shadow: var(--glow);
+}
+.look-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.look-frame figcaption {
+  margin: 0;
+  padding: 9px 12px 11px;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  border-top: 1px solid var(--line);
+  background: #000;
+}
+.look-spread {
+  display: grid;
+  grid-template-columns: 1.06fr 0.94fr;
+  gap: 14px;
+  margin: 0 0 16px;
+}
+.look-spread .look-frame { margin: 0; }
+.look-signs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 10px;
+}
+.look-signs .look-frame { margin: 0; }
+.look-note {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  text-align: center;
+}
+
 .hidden { display: none; }
 
 @media (max-width: 720px) {
   .spine { display: none; }
   .masthead { align-items: flex-start; }
   .mark { width: 64px; height: 64px; }
+  .look-spread,
+  .look-signs { grid-template-columns: 1fr; }
 }
