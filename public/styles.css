@@ -440,36 +440,51 @@ body.kiosk {
     max(16px, env(safe-area-inset-bottom))
     max(12px, env(safe-area-inset-left));
 }
-.kiosk-intro {
+.kiosk-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   margin: 0 0 22px;
 }
-.kiosk-mark {
+.kiosk-logo {
   display: block;
-  width: 48px;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+.kiosk-logo img {
+  display: block;
+  width: 40px;
   height: auto;
-  margin: 0 0 14px;
 }
 .kiosk-install {
-  margin: 12px 0 0;
+  margin: 0 0 0 auto;
   padding: 0;
   border: 0;
   background: none;
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   letter-spacing: 0.02em;
-  line-height: 1.4;
+  line-height: 1.35;
+  text-align: right;
 }
-.kiosk-copy p {
-  margin: 0 0 1em;
-  color: var(--ink);
-  font-size: clamp(0.98rem, 1.2vw, 1.08rem);
-  line-height: 1.6;
-  max-width: 42rem;
+.kiosk-intro {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 40px;
+  margin: 0 0 28px;
+  padding-top: 4px;
 }
-.kiosk-copy p:last-child { margin-bottom: 0; }
-.kiosk-copy strong {
+.kiosk-intro p {
+  margin: 0;
+  color: #b9d4dc;
+  font-size: clamp(0.92rem, 1.05vw, 1.05rem);
+  line-height: 1.5;
+  font-weight: 400;
+}
+.kiosk-sr {
   color: var(--cyan);
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
 }
 body.is-standalone .kiosk-install,
@@ -672,11 +687,12 @@ body.is-standalone .kiosk-install,
 
 @media (max-width: 920px), (orientation: portrait) {
   .kiosk-shell { width: min(720px, calc(100% - 32px)); }
+  .kiosk-intro { grid-template-columns: 1fr; gap: 1em; }
   .kiosk-grid { grid-template-columns: 1fr; gap: 22px; }
   .kiosk-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .kiosk-chips.pay { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .kiosk-mark { width: 44px; margin-bottom: 12px; }
-  .kiosk-copy p { font-size: 1rem; }
+  .kiosk-logo img { width: 36px; }
+  .kiosk-intro p { font-size: 1rem; }
 }
 @media (display-mode: standalone), (display-mode: fullscreen) {
   .kiosk-shell {

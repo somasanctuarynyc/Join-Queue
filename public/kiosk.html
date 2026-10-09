@@ -29,14 +29,18 @@
 </head>
 <body class="kiosk">
   <div class="kiosk-shell">
+    <div class="kiosk-top">
+      <a class="kiosk-logo" href="https://www.somasanctuary.nyc" target="_blank" rel="noreferrer">
+        <img src="/brand/lockup-square.png" alt="SOMA Sanctuary" />
+      </a>
+      <p class="kiosk-install" id="safari-hint" hidden>Share → Add to Home Screen, then Guided Access.</p>
+    </div>
+
     <section id="join-view" class="kiosk-view">
       <header class="kiosk-intro">
-        <img class="kiosk-mark" src="/brand/lockup-square.png" alt="SOMA Sanctuary" />
-        <div class="kiosk-copy">
-          <p>I'm Nick, a New York State–licensed and registered Occupational Therapist. I've worked with professional athletic organizations, including the NFL and the New York Triathlon, and today my private practice in Manhattan serves New Yorkers ranging from Broadway performers to patients living with Parkinson's disease.</p>
-          <p>In recent years, I've developed a new modality specifically for nightlife called <strong>Somatic Return℠</strong>. Its premise is simple: to bring you back into your body, reconnect you with the present moment, and counter the overwhelm that can come with crowded, high-energy social environments.</p>
-          <p>Rather than leaving an event to self-regulate, give yourself 5–10 minutes for a focused session designed to restore a sense of ease, presence, and comfort—so you can get back to the party feeling more like yourself.</p>
-        </div>
+        <p>I'm Nick, a New York State–licensed and registered Occupational Therapist. I've worked with professional athletic organizations, including the NFL and the New York Triathlon, and today my private practice in Manhattan serves New Yorkers ranging from Broadway performers to patients living with Parkinson's disease.</p>
+        <p>In recent years, I've developed a new modality specifically for nightlife called <span class="kiosk-sr">Somatic Return℠</span>. Its premise is simple: to bring you back into your body, reconnect you with the present moment, and counter the overwhelm that can come with crowded, high-energy social environments.</p>
+        <p>Rather than leaving an event to self-regulate, give yourself 5–10 minutes for a focused session designed to restore a sense of ease, presence, and comfort—so you can get back to the party feeling more like yourself.</p>
       </header>
 
       <form id="join-form" autocomplete="off">
@@ -80,8 +84,6 @@
         <p class="kiosk-check-out" id="check-out"></p>
       </form>
     </footer>
-
-    <p class="kiosk-install" id="safari-hint" hidden>Share → Add to Home Screen, then Guided Access.</p>
   </div>
   <script>
     const errorEl = document.getElementById("error");
