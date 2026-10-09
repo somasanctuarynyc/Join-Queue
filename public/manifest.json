@@ -1,0 +1,25 @@
+{
+  "name": "SOMA Sanctuary",
+  "short_name": "SOMA",
+  "description": "Join The Queue at SOMA Sanctuary. Release, restore, return.",
+  "start_url": "/kiosk",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/brand/lockup-square.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

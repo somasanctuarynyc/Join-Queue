@@ -229,6 +229,7 @@ class Handler(SimpleHTTPRequestHandler):
         aliases = {
             "/": "/join.html",
             "/join": "/join.html",
+            "/kiosk": "/kiosk.html",
             "/check": "/check.html",
             "/display": "/display.html",
             "/admin": "/admin.html",
@@ -559,6 +560,7 @@ def main() -> None:
     else:
         ip = lan_hint()
         print(f"  Local:  http://127.0.0.1:{PORT}/join")
+        print(f"  Kiosk:  http://127.0.0.1:{PORT}/kiosk")
         print(f"  LAN:    http://{ip}:{PORT}/join")
         print(f"  Check:  http://127.0.0.1:{PORT}/check")
         print(f"  Board:  http://127.0.0.1:{PORT}/display")

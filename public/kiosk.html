@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>SOMA Sanctuary — Join The Queue</title>
+  <meta name="description" content="SOMA Sanctuary · Somatic Return. Release, restore, return." />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="SOMA" />
+  <meta property="og:title" content="SOMA Sanctuary — Join The Queue" />
+  <meta property="og:description" content="SOMA Sanctuary · Somatic Return. Release, restore, return." />
+  <meta property="og:image" content="https://join-queue.onrender.com/brand/og-share.png" />
+  <meta property="og:url" content="https://join-queue.onrender.com/kiosk" />
+  <meta property="og:type" content="website" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/brand/lockup-square.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Exo+2:wght@400;500;600&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="kiosk">
+  <div class="kiosk-shell">
+    <header class="kiosk-mast">
+      <img class="kiosk-mark" src="/brand/lockup-square.png" alt="SOMA Sanctuary" />
+      <div class="kiosk-brand">
+        <p class="kiosk-tag">Release · Restore · Return</p>
+        <p class="kiosk-soma">Somatic Return — a brief recalibration, then back into the room.</p>
+      </div>
+    </header>
+
+    <section id="join-view" class="kiosk-view">
+      <form id="join-form" autocomplete="off">
+        <div class="kiosk-grid">
+          <div class="kiosk-who">
+            <label for="name">Your name</label>
+            <input id="name" name="name" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="next" required />
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="10-digit number" enterkeyhint="done" required />
+          </div>
+          <div class="kiosk-pick">
+            <p class="kiosk-legend">Session</p>
+            <div class="kiosk-chips" id="session-chips"></div>
+            <p class="kiosk-price" id="price-note">$3 a minute</p>
+            <p class="kiosk-legend">How you plan to pay</p>
+            <div class="kiosk-chips pay" id="payment-chips"></div>
+            <p class="kiosk-intent">Nothing is charged on this screen. Tell us how you’d like to settle when you return.</p>
+          </div>
+        </div>
+        <div class="kiosk-actions">
+          <button type="submit" class="kiosk-submit" id="join-btn">Join The Queue</button>
+        </div>
+        <p class="err hidden" id="error"></p>
+      </form>
+    </section>
+
+    <section id="result-view" class="kiosk-view kiosk-result hidden">
+      <p class="kiosk-kicker" id="result-kicker">You’re in</p>
+      <p class="kiosk-msg" id="result-msg"></p>
+      <p class="kiosk-time" id="result-time"></p>
+      <p class="kiosk-price" id="result-price"></p>
+      <button type="button" class="kiosk-submit" id="next-guest">Next guest</button>
+    </section>
+
+    <footer class="kiosk-foot">
+      <button type="button" class="kiosk-quiet" id="check-toggle">Check my time</button>
+      <form id="check-form" class="kiosk-check hidden" autocomplete="off">
+        <label class="sr-only" for="check-phone">Phone</label>
+        <input id="check-phone" inputmode="numeric" autocomplete="off" placeholder="Phone you joined with" />
+        <button type="submit" class="kiosk-check-btn">See time</button>
+        <p class="kiosk-check-out" id="check-out"></p>
+      </form>
+    </footer>
+  </div>
+  <script>
+    const errorEl = document.getElementById("error");
+    const joinView = document.getElementById("join-view");
+    const resultView = document.getElementById("result-view");
+    const joinForm = document.getElementById("join-form");
+    const joinBtn = document.getElementById("join-btn");
+    const checkForm = document.getElementById("check-form");
+    const checkOut = document.getElementById("check-out");
+    let pricePerMinute = 3;
+    let defaultSession = "15";
+
+    function dollars(minutes) {
+      return `$${minutes * pricePerMinute}`;
+    }
+
+    function selectedValue(name) {
+      const node = document.querySelector(`input[name="${name}"]:checked`);
+      return node ? node.value : "";
+    }
+
+    function updatePrice() {
+      const minutes = Number(selectedValue("session_minutes"));
+      const note = document.getElementById("price-note");
+      if (!minutes) {
+        note.textContent = `$${pricePerMinute} a minute`;
+        return;
+      }
+      note.textContent = `$${pricePerMinute} a minute · ${dollars(minutes)} estimated`;
+    }
+
+    function renderChips(el, values, name, selected, labelFor) {
+      el.replaceChildren();
+      values.forEach((value) => {
+        const id = `${name}-${value}`;
+        const label = document.createElement("label");
+        label.className = "kiosk-chip";
+        label.setAttribute("for", id);
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.id = id;
+        input.name = name;
+        input.value = String(value);
+        if (String(value) === String(selected)) input.checked = true;
+        const text = document.createElement("span");
+        text.textContent = labelFor(value);
+        label.append(input, text);
+        el.append(label);
+      });
+    }
+
+    function showJoin() {
+      resultView.classList.add("hidden");
+      joinView.classList.remove("hidden");
+      errorEl.classList.add("hidden");
+      errorEl.textContent = "";
+      joinBtn.disabled = false;
+      document.getElementById("name").focus();
+    }
+
+    function resetForNextGuest() {
+      joinForm.reset();
+      const session = document.querySelector(`input[name="session_minutes"][value="${defaultSession}"]`);
+      if (session) session.checked = true;
+      const firstPay = document.querySelector('input[name="payment"]');
+      if (firstPay) firstPay.checked = true;
+      updatePrice();
+      checkForm.classList.add("hidden");
+      checkOut.textContent = "";
+      document.getElementById("check-phone").value = "";
+      showJoin();
+    }
+
+    async function boot() {
+      const meta = await fetch("/api/meta").then((r) => r.json());
+      pricePerMinute = Number(meta.price_per_minute) || 3;
+      const sessions = meta.sessions || [5, 10, 15, 20];
+      defaultSession = sessions.includes(15) ? "15" : String(sessions[0] || "15");
+      renderChips(
+        document.getElementById("session-chips"),
+        sessions,
+        "session_minutes",
+        defaultSession,
+        (m) => `${m} min`
+      );
+      renderChips(
+        document.getElementById("payment-chips"),
+        meta.payments || [],
+        "payment",
+        (meta.payments || [])[0] || "",
+        (p) => p
+      );
+      document.getElementById("session-chips").addEventListener("change", updatePrice);
+      updatePrice();
+    }
+
+    document.getElementById("name").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        document.getElementById("phone").focus();
+      }
+    });
+
+    joinForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorEl.classList.add("hidden");
+      const sessionMinutes = Number(selectedValue("session_minutes"));
+      const payment = selectedValue("payment");
+      if (!sessionMinutes) {
+        errorEl.textContent = "Choose a session length.";
+        errorEl.classList.remove("hidden");
+        return;
+      }
+      if (!payment) {
+        errorEl.textContent = "Choose how you plan to pay.";
+        errorEl.classList.remove("hidden");
+        return;
+      }
+      joinBtn.disabled = true;
+      const body = {
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        session_minutes: sessionMinutes,
+        payment,
+      };
+      try {
+        const res = await fetch("/api/join", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          errorEl.textContent = data.error || "Could not join.";
+          errorEl.classList.remove("hidden");
+          joinBtn.disabled = false;
+          return;
+        }
+        document.getElementById("result-kicker").textContent = data.already_in_line
+          ? "Already in line"
+          : "You’re in";
+        document.getElementById("result-msg").textContent = data.message;
+        document.getElementById("result-time").textContent = data.return_label || "";
+        document.getElementById("result-price").textContent = data.already_in_line
+          ? "Ask if you need your time checked again."
+          : `${dollars(sessionMinutes)} estimated · nothing was charged here`;
+        joinView.classList.add("hidden");
+        resultView.classList.remove("hidden");
+      } catch {
+        errorEl.textContent = "Could not join. Check the connection and try again.";
+        errorEl.classList.remove("hidden");
+        joinBtn.disabled = false;
+      }
+    });
+
+    document.getElementById("next-guest").addEventListener("click", resetForNextGuest);
+
+    document.getElementById("check-toggle").addEventListener("click", () => {
+      checkForm.classList.toggle("hidden");
+      if (!checkForm.classList.contains("hidden")) {
+        document.getElementById("check-phone").focus();
+      }
+    });
+
+    checkForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const phone = encodeURIComponent(document.getElementById("check-phone").value);
+      const res = await fetch(`/api/check?phone=${phone}`);
+      const data = await res.json();
+      if (!res.ok) {
+        checkOut.textContent = data.error || "Not found.";
+        return;
+      }
+      checkOut.textContent = data.return_label
+        ? `${data.message}  ${data.return_label}`
+        : data.message;
+    });
+
+    boot();
+  </script>
+</body>
+</html>
