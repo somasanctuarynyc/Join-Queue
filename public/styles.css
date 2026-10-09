@@ -476,16 +476,16 @@ body.kiosk {
   text-align: right;
 }
 .kiosk-more {
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--muted);
+  border: 1px solid var(--cyan);
+  border-radius: 999px;
+  background: #000;
+  color: var(--cyan);
   font-family: var(--font-display);
-  font-size: 0.78rem;
-  letter-spacing: 0.16em;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  min-height: 44px;
-  padding: 10px 2px;
+  min-height: 48px;
+  padding: 10px 22px;
   box-shadow: none;
   filter: none;
   cursor: pointer;
@@ -493,7 +493,8 @@ body.kiosk {
 .kiosk-more:hover,
 .kiosk-more:hover:not(:disabled),
 .kiosk-more:focus-visible {
-  color: var(--cyan);
+  color: var(--cyan-2);
+  border-color: var(--cyan-2);
   outline: none;
   filter: none;
 }
@@ -521,6 +522,7 @@ body.kiosk {
 body.is-standalone .kiosk-install,
 .kiosk-install[hidden],
 .kiosk-more[hidden],
+.kiosk-learn[hidden],
 .kiosk-foot[hidden] {
   display: none !important;
 }
@@ -617,7 +619,12 @@ body.is-standalone .kiosk-install,
   font-size: 1.12rem;
   line-height: 1.4;
 }
-.kiosk-actions { margin-top: 28px; }
+.kiosk-actions {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 .kiosk-submit {
   width: 100%;
   min-height: 92px;
@@ -632,6 +639,31 @@ body.is-standalone .kiosk-install,
   text-transform: uppercase;
   font-size: 1.28rem;
   box-shadow: var(--glow);
+}
+.kiosk-learn {
+  width: 100%;
+  min-height: 76px;
+  border: 2px solid var(--cyan);
+  border-radius: 999px;
+  padding: 16px 24px;
+  background: #000;
+  color: var(--cyan);
+  cursor: pointer;
+  font-family: var(--font-display);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 1.12rem;
+  box-shadow: 0 0 22px rgba(0, 229, 255, 0.28);
+  filter: none;
+}
+.kiosk-learn:hover,
+.kiosk-learn:hover:not(:disabled),
+.kiosk-learn:focus-visible {
+  color: var(--cyan-2);
+  border-color: var(--cyan-2);
+  box-shadow: 0 0 28px rgba(0, 229, 255, 0.45);
+  outline: none;
+  filter: none;
 }
 .kiosk-submit:hover:not(:disabled) { filter: brightness(1.08); }
 .kiosk-submit:disabled { opacity: 0.45; cursor: not-allowed; }
