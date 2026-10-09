@@ -445,7 +445,8 @@ body.kiosk {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin: 0 0 22px;
+  margin: 0 0 18px;
+  flex: 0 0 auto;
 }
 .kiosk-logo {
   display: block;
@@ -457,8 +458,14 @@ body.kiosk {
   width: 40px;
   height: auto;
 }
+.kiosk-top-end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 .kiosk-install {
-  margin: 0 0 0 auto;
+  margin: 0;
   padding: 0;
   border: 0;
   background: none;
@@ -468,57 +475,83 @@ body.kiosk {
   line-height: 1.35;
   text-align: right;
 }
-.kiosk-intro {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px 40px;
-  margin: 0 0 28px;
-  padding-top: 4px;
+.kiosk-more {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  min-height: 44px;
+  padding: 10px 2px;
+  box-shadow: none;
+  filter: none;
+  cursor: pointer;
 }
-.kiosk-intro p {
-  margin: 0;
-  color: #b9d4dc;
-  font-size: clamp(0.92rem, 1.05vw, 1.05rem);
-  line-height: 1.5;
+.kiosk-more:hover,
+.kiosk-more:hover:not(:disabled),
+.kiosk-more:focus-visible {
+  color: var(--cyan);
+  outline: none;
+  filter: none;
+}
+.kiosk-about {
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 4px 0 28px;
+}
+.kiosk-about p {
+  margin: 0 0 1.15em;
+  max-width: 38rem;
+  color: #cfe6ec;
+  font-size: clamp(1.35rem, 2.35vw, 1.72rem);
+  line-height: 1.55;
   font-weight: 400;
 }
+.kiosk-about p:last-child { margin-bottom: 0; }
 .kiosk-sr {
   color: var(--cyan);
   font-weight: 500;
   white-space: nowrap;
 }
 body.is-standalone .kiosk-install,
-.kiosk-install[hidden] {
+.kiosk-install[hidden],
+.kiosk-more[hidden],
+.kiosk-foot[hidden] {
   display: none !important;
 }
 @media (display-mode: standalone), (display-mode: fullscreen) {
   .kiosk-install { display: none !important; }
 }
-.kiosk-view { flex: 1; display: flex; flex-direction: column; }
+.kiosk-view { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .kiosk-view.hidden { display: none; }
 .kiosk-grid {
   display: grid;
   grid-template-columns: 0.9fr 1.15fr;
-  gap: 22px 32px;
+  gap: 28px 40px;
   align-items: start;
 }
 .kiosk label,
 .kiosk-legend {
   display: block;
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   font-family: var(--font-display);
-  font-size: 0.86rem;
+  font-size: 1.02rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--cyan-2);
 }
-.kiosk-who label:not(:first-child) { margin-top: 16px; }
+.kiosk-who label:not(:first-child) { margin-top: 22px; }
 .kiosk input[type="text"],
 .kiosk input:not([type="radio"]) {
   width: 100%;
-  min-height: 64px;
-  padding: 16px 18px;
-  font-size: 1.35rem;
+  min-height: 80px;
+  padding: 18px 20px;
+  font-size: 1.55rem;
   border-radius: 4px;
   border: 1px solid var(--line);
   background: rgba(0, 0, 0, 0.55);
@@ -532,7 +565,7 @@ body.is-standalone .kiosk-install,
 .kiosk-chips {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: 14px;
 }
 .kiosk-chips.pay {
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -550,14 +583,14 @@ body.is-standalone .kiosk-install,
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 72px;
-  padding: 10px 8px;
+  min-height: 88px;
+  padding: 12px 8px;
   border: 1px solid var(--line);
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.5);
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: clamp(0.9rem, 1.7vw, 1.12rem);
+  font-size: clamp(1.05rem, 1.85vw, 1.28rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-align: center;
@@ -572,32 +605,32 @@ body.is-standalone .kiosk-install,
   box-shadow: var(--glow);
 }
 .kiosk-price {
-  margin: 12px 0 18px;
+  margin: 16px 0 22px;
   color: var(--cyan);
   font-family: var(--font-display);
   letter-spacing: 0.08em;
-  font-size: 1.02rem;
+  font-size: 1.22rem;
 }
 .kiosk-intent {
-  margin: 12px 0 0;
+  margin: 14px 0 0;
   color: var(--muted);
-  font-size: 1.02rem;
+  font-size: 1.12rem;
   line-height: 1.4;
 }
-.kiosk-actions { margin-top: 22px; }
+.kiosk-actions { margin-top: 28px; }
 .kiosk-submit {
   width: 100%;
-  min-height: 76px;
+  min-height: 92px;
   border: 0;
   border-radius: 4px;
-  padding: 18px 24px;
+  padding: 20px 24px;
   background: var(--cyan);
   color: #001016;
   cursor: pointer;
   font-family: var(--font-display);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-size: 1.12rem;
+  font-size: 1.28rem;
   box-shadow: var(--glow);
 }
 .kiosk-submit:hover:not(:disabled) { filter: brightness(1.08); }
@@ -645,14 +678,21 @@ body.is-standalone .kiosk-install,
 }
 .kiosk-quiet {
   border: 0;
+  border-radius: 0;
   background: transparent;
   color: var(--muted);
   padding: 8px 0;
   font-size: 0.82rem;
   letter-spacing: 0.08em;
+  box-shadow: none;
+  filter: none;
   cursor: pointer;
 }
-.kiosk-quiet:hover { color: var(--cyan); }
+.kiosk-quiet:hover,
+.kiosk-quiet:hover:not(:disabled) {
+  color: var(--cyan);
+  filter: none;
+}
 .kiosk-check {
   display: flex;
   flex-wrap: wrap;
@@ -687,12 +727,11 @@ body.is-standalone .kiosk-install,
 
 @media (max-width: 920px), (orientation: portrait) {
   .kiosk-shell { width: min(720px, calc(100% - 32px)); }
-  .kiosk-intro { grid-template-columns: 1fr; gap: 1em; }
   .kiosk-grid { grid-template-columns: 1fr; gap: 22px; }
   .kiosk-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .kiosk-chips.pay { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .kiosk-logo img { width: 36px; }
-  .kiosk-intro p { font-size: 1rem; }
+  .kiosk-about p { font-size: 1.28rem; max-width: none; }
 }
 @media (display-mode: standalone), (display-mode: fullscreen) {
   .kiosk-shell {

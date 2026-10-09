@@ -33,16 +33,14 @@
       <a class="kiosk-logo" href="https://www.somasanctuary.nyc" target="_blank" rel="noreferrer">
         <img src="/brand/lockup-square.png" alt="SOMA Sanctuary" />
       </a>
-      <p class="kiosk-install" id="safari-hint" hidden>Share → Add to Home Screen, then Guided Access.</p>
+      <div class="kiosk-top-end">
+        <p class="kiosk-install" id="safari-hint" hidden>Share → Add to Home Screen, then Guided Access.</p>
+        <button type="button" class="kiosk-more" id="learn-more">Learn more</button>
+        <button type="button" class="kiosk-more" id="about-back" hidden>Back</button>
+      </div>
     </div>
 
     <section id="join-view" class="kiosk-view">
-      <header class="kiosk-intro">
-        <p>I'm Nick, a New York State–licensed and registered Occupational Therapist. I've worked with professional athletic organizations, including the NFL and the New York Triathlon, and today my private practice in Manhattan serves New Yorkers ranging from Broadway performers to patients living with Parkinson's disease.</p>
-        <p>In recent years, I've developed a new modality specifically for nightlife called <span class="kiosk-sr">Somatic Return℠</span>. Its premise is simple: to bring you back into your body, reconnect you with the present moment, and counter the overwhelm that can come with crowded, high-energy social environments.</p>
-        <p>Rather than leaving an event to self-regulate, give yourself 5–10 minutes for a focused session designed to restore a sense of ease, presence, and comfort—so you can get back to the party feeling more like yourself.</p>
-      </header>
-
       <form id="join-form" autocomplete="off">
         <div class="kiosk-grid">
           <div class="kiosk-who">
@@ -67,6 +65,12 @@
       </form>
     </section>
 
+    <section id="about-view" class="kiosk-view kiosk-about hidden">
+      <p>I'm Nick, a New York State–licensed and registered Occupational Therapist. I've worked with professional athletic organizations, including the NFL and the New York Triathlon, and today my private practice in Manhattan serves New Yorkers ranging from Broadway performers to patients living with Parkinson's disease.</p>
+      <p>In recent years, I've developed a new modality specifically for nightlife called <span class="kiosk-sr">Somatic Return℠</span>. Its premise is simple: to bring you back into your body, reconnect you with the present moment, and counter the overwhelm that can come with crowded, high-energy social environments.</p>
+      <p>Rather than leaving an event to self-regulate, give yourself 5–10 minutes for a focused session designed to restore a sense of ease, presence, and comfort—so you can get back to the party feeling more like you.</p>
+    </section>
+
     <section id="result-view" class="kiosk-view kiosk-result hidden">
       <p class="kiosk-kicker" id="result-kicker">You’re in</p>
       <p class="kiosk-msg" id="result-msg"></p>
@@ -75,7 +79,7 @@
       <button type="button" class="kiosk-submit" id="next-guest">Next guest</button>
     </section>
 
-    <footer class="kiosk-foot">
+    <footer class="kiosk-foot" id="kiosk-foot">
       <button type="button" class="kiosk-quiet" id="check-toggle">Check my time</button>
       <form id="check-form" class="kiosk-check hidden" autocomplete="off">
         <label class="sr-only" for="check-phone">Phone</label>
@@ -88,11 +92,15 @@
   <script>
     const errorEl = document.getElementById("error");
     const joinView = document.getElementById("join-view");
+    const aboutView = document.getElementById("about-view");
     const resultView = document.getElementById("result-view");
     const joinForm = document.getElementById("join-form");
     const joinBtn = document.getElementById("join-btn");
     const checkForm = document.getElementById("check-form");
     const checkOut = document.getElementById("check-out");
+    const learnMoreBtn = document.getElementById("learn-more");
+    const aboutBackBtn = document.getElementById("about-back");
+    const kioskFoot = document.getElementById("kiosk-foot");
     let pricePerMinute = 3;
     let defaultSession = "15";
 
@@ -156,13 +164,29 @@
       });
     }
 
-    function showJoin() {
+    function showJoin({ focusName = false } = {}) {
+      aboutView.classList.add("hidden");
       resultView.classList.add("hidden");
       joinView.classList.remove("hidden");
+      document.body.classList.remove("kiosk-reading");
+      learnMoreBtn.hidden = false;
+      aboutBackBtn.hidden = true;
+      kioskFoot.hidden = false;
       errorEl.classList.add("hidden");
       errorEl.textContent = "";
       joinBtn.disabled = false;
-      document.getElementById("name").focus();
+      if (focusName) document.getElementById("name").focus();
+    }
+
+    function showAbout() {
+      joinView.classList.add("hidden");
+      resultView.classList.add("hidden");
+      aboutView.classList.remove("hidden");
+      document.body.classList.add("kiosk-reading");
+      learnMoreBtn.hidden = true;
+      aboutBackBtn.hidden = false;
+      kioskFoot.hidden = true;
+      aboutView.scrollTop = 0;
     }
 
     function resetForNextGuest() {
@@ -175,7 +199,7 @@
       checkForm.classList.add("hidden");
       checkOut.textContent = "";
       document.getElementById("check-phone").value = "";
-      showJoin();
+      showJoin({ focusName: true });
     }
 
     async function boot() {
@@ -207,6 +231,9 @@
         document.getElementById("phone").focus();
       }
     });
+
+    learnMoreBtn.addEventListener("click", showAbout);
+    aboutBackBtn.addEventListener("click", () => showJoin());
 
     joinForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -252,7 +279,12 @@
           ? "Ask if you need your time checked again."
           : `${dollars(sessionMinutes)} estimated · nothing was charged here`;
         joinView.classList.add("hidden");
+        aboutView.classList.add("hidden");
         resultView.classList.remove("hidden");
+        document.body.classList.remove("kiosk-reading");
+        learnMoreBtn.hidden = true;
+        aboutBackBtn.hidden = true;
+        kioskFoot.hidden = false;
       } catch {
         errorEl.textContent = "Could not join. Check the connection and try again.";
         errorEl.classList.remove("hidden");
