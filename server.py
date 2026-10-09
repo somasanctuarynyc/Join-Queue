@@ -166,6 +166,21 @@ class Handler(SimpleHTTPRequestHandler):
     def log_message(self, fmt: str, *args) -> None:
         print(f"[{now().strftime('%H:%M:%S')}] {fmt % args}")
 
+    def guess_type(self, path):
+        name = Path(str(path)).name.lower()
+        result = super().guess_type(path)
+        if name != "manifest.json" and not name.endswith(".webmanifest"):
+            return result
+        if isinstance(result, tuple):
+            return "application/manifest+json", result[1]
+        return "application/manifest+json"
+
+    def end_headers(self) -> None:
+        path = urlparse(self.path).path.lower()
+        if path.endswith((".html", ".webmanifest")) or path.endswith("manifest.json"):
+            self.send_header("Cache-Control", "no-store")
+        super().end_headers()
+
     def _session_token(self) -> str | None:
         cookie = SimpleCookie(self.headers.get("Cookie", ""))
         morsel = cookie.get("jtq_admin")

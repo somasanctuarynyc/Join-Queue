@@ -422,6 +422,7 @@ body.kiosk {
   min-height: 100dvh;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   background:
     radial-gradient(1100px 520px at 18% -10%, rgba(0, 229, 255, 0.16), transparent 58%),
     radial-gradient(800px 480px at 100% 110%, rgba(21, 87, 255, 0.18), transparent 55%),
@@ -431,22 +432,57 @@ body.kiosk {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  width: min(1180px, calc(100% - 48px));
+  width: min(1240px, calc(100% - 40px));
   margin: 0 auto;
   padding:
-    max(22px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-top))
     max(8px, env(safe-area-inset-right))
-    max(16px, env(safe-area-inset-bottom))
+    max(14px, env(safe-area-inset-bottom))
     max(8px, env(safe-area-inset-left));
+}
+.kiosk-install {
+  margin: 0 0 14px;
+  padding: 10px 14px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(0, 16, 24, 0.78);
+  color: var(--muted);
+  font-size: clamp(0.92rem, 1.5vw, 1.05rem);
+  line-height: 1.45;
+}
+.kiosk-install-kicker {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.kiosk-install p { margin: 0; }
+.kiosk-install strong { color: var(--ink); font-weight: 600; }
+.kiosk-share {
+  display: inline-block;
+  width: 1.05em;
+  height: 1.05em;
+  margin: 0 0.18em -0.12em;
+  color: var(--cyan);
+  vertical-align: middle;
+}
+body.is-standalone .kiosk-install,
+.kiosk-install[hidden] {
+  display: none !important;
+}
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  .kiosk-install { display: none !important; }
 }
 .kiosk-mast {
   display: flex;
   align-items: center;
   gap: 22px;
-  margin: 0 0 18px;
+  margin: 0 0 16px;
 }
 .kiosk-mark {
-  width: min(168px, 22vw);
+  width: min(148px, 18vw);
   height: auto;
   flex: 0 0 auto;
   filter: drop-shadow(0 0 18px rgba(0, 229, 255, 0.35));
@@ -455,24 +491,54 @@ body.kiosk {
 .kiosk-tag {
   margin: 0 0 8px;
   font-family: var(--font-display);
-  font-size: clamp(0.82rem, 2vw, 1.05rem);
-  letter-spacing: 0.34em;
+  font-size: clamp(0.92rem, 2.1vw, 1.18rem);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--cyan);
 }
 .kiosk-soma {
   margin: 0;
-  color: var(--muted);
-  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
-  line-height: 1.45;
-  max-width: 36rem;
+  color: var(--ink);
+  font-size: clamp(1.12rem, 2.1vw, 1.38rem);
+  line-height: 1.4;
+  max-width: 46rem;
+}
+.kiosk-flow {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+.kiosk-flow li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 64px;
+  margin: 0;
+  padding: 10px 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.42);
+  color: var(--ink);
+  font-size: clamp(0.92rem, 1.45vw, 1.08rem);
+  line-height: 1.3;
+}
+.kiosk-flow span {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--cyan);
+  padding-top: 2px;
 }
 .kiosk-view { flex: 1; display: flex; flex-direction: column; }
 .kiosk-view.hidden { display: none; }
 .kiosk-grid {
   display: grid;
   grid-template-columns: 0.9fr 1.15fr;
-  gap: 28px 36px;
+  gap: 22px 32px;
   align-items: start;
 }
 .kiosk label,
@@ -480,18 +546,18 @@ body.kiosk {
   display: block;
   margin: 0 0 10px;
   font-family: var(--font-display);
-  font-size: 0.78rem;
+  font-size: 0.86rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--cyan-2);
 }
-.kiosk-who label:not(:first-child) { margin-top: 18px; }
+.kiosk-who label:not(:first-child) { margin-top: 16px; }
 .kiosk input[type="text"],
 .kiosk input:not([type="radio"]) {
   width: 100%;
-  min-height: 68px;
+  min-height: 64px;
   padding: 16px 18px;
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   border-radius: 4px;
   border: 1px solid var(--line);
   background: rgba(0, 0, 0, 0.55);
@@ -530,7 +596,7 @@ body.kiosk {
   background: rgba(0, 0, 0, 0.5);
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: clamp(0.82rem, 1.6vw, 1.05rem);
+  font-size: clamp(0.9rem, 1.7vw, 1.12rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-align: center;
@@ -545,17 +611,17 @@ body.kiosk {
   box-shadow: var(--glow);
 }
 .kiosk-price {
-  margin: 12px 0 20px;
+  margin: 12px 0 18px;
   color: var(--cyan);
   font-family: var(--font-display);
   letter-spacing: 0.08em;
-  font-size: 0.95rem;
+  font-size: 1.02rem;
 }
 .kiosk-intent {
   margin: 12px 0 0;
   color: var(--muted);
-  font-size: 0.95rem;
-  line-height: 1.45;
+  font-size: 1.02rem;
+  line-height: 1.4;
 }
 .kiosk-actions { margin-top: 22px; }
 .kiosk-submit {
@@ -570,7 +636,7 @@ body.kiosk {
   font-family: var(--font-display);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-size: 1.05rem;
+  font-size: 1.12rem;
   box-shadow: var(--glow);
 }
 .kiosk-submit:hover:not(:disabled) { filter: brightness(1.08); }
@@ -658,14 +724,21 @@ body.kiosk {
   font-size: 0.95rem;
 }
 
+@media (max-width: 1100px) {
+  .kiosk-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .kiosk-flow li:nth-child(4),
+  .kiosk-flow li:nth-child(5) { grid-column: span 1; }
+}
 @media (max-width: 920px), (orientation: portrait) {
   .kiosk-shell { width: min(720px, calc(100% - 32px)); }
   .kiosk-grid { grid-template-columns: 1fr; gap: 22px; }
   .kiosk-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .kiosk-chips.pay { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .kiosk-mark { width: 120px; }
+  .kiosk-flow { grid-template-columns: 1fr 1fr; }
+  .kiosk-soma { font-size: 1.12rem; }
 }
-@media (display-mode: standalone) {
+@media (display-mode: standalone), (display-mode: fullscreen) {
   .kiosk-shell {
     padding-top: max(28px, env(safe-area-inset-top));
   }

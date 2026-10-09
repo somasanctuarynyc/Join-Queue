@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
   <title>SOMA Sanctuary — Join The Queue</title>
-  <meta name="description" content="SOMA Sanctuary · Somatic Return. Release, restore, return." />
+  <meta name="description" content="SOMA Sanctuary · Somatic Return. Focused therapeutic touch so you can return to the event." />
   <meta name="theme-color" content="#000000" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta name="apple-mobile-web-app-title" content="SOMA" />
+  <meta name="application-name" content="SOMA" />
   <meta property="og:title" content="SOMA Sanctuary — Join The Queue" />
   <meta property="og:description" content="SOMA Sanctuary · Somatic Return. Release, restore, return." />
   <meta property="og:image" content="https://join-queue.onrender.com/brand/og-share.png" />
@@ -18,6 +19,9 @@
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/brand/lockup-square.png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Exo+2:wght@400;500;600&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -25,15 +29,36 @@
 </head>
 <body class="kiosk">
   <div class="kiosk-shell">
+    <aside class="kiosk-install" id="safari-hint" role="note">
+      <p class="kiosk-install-kicker">This is still Safari</p>
+      <p>
+        Share
+        <svg class="kiosk-share" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 3v11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <path d="M8.2 6.6 12 2.8l3.8 3.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M7 10.5H6.2A2.2 2.2 0 0 0 4 12.7v7.1A2.2 2.2 0 0 0 6.2 22h11.6A2.2 2.2 0 0 0 20 19.8v-7.1a2.2 2.2 0 0 0-2.2-2.2H17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+        (box with arrow) → Add to Home Screen → open the <strong>SOMA</strong> icon.
+        Then Guided Access: Settings → Accessibility → Guided Access On; open the icon; triple-click the side button → Start.
+      </p>
+    </aside>
+
     <header class="kiosk-mast">
       <img class="kiosk-mark" src="/brand/lockup-square.png" alt="SOMA Sanctuary" />
       <div class="kiosk-brand">
-        <p class="kiosk-tag">Release · Restore · Return</p>
-        <p class="kiosk-soma">Somatic Return — a brief recalibration, then back into the room.</p>
+        <p class="kiosk-tag">SOMA Sanctuary · Somatic Return</p>
+        <p class="kiosk-soma">Focused therapeutic touch, here in the room. A brief recalibration so you can return to the event — not a spa appointment in another building.</p>
       </div>
     </header>
 
     <section id="join-view" class="kiosk-view">
+      <ol class="kiosk-flow" aria-label="What to expect">
+        <li><span>1</span> Fill this</li>
+        <li><span>2</span> Get a return time</li>
+        <li><span>3</span> Come back around then</li>
+        <li><span>4</span> Session 5 / 10 / 15 / 20 min · $3/min · nothing charged on this iPad</li>
+        <li><span>5</span> Check your time later on your phone</li>
+      </ol>
       <form id="join-form" autocomplete="off">
         <div class="kiosk-grid">
           <div class="kiosk-who">
@@ -48,7 +73,7 @@
             <p class="kiosk-price" id="price-note">$3 a minute</p>
             <p class="kiosk-legend">How you plan to pay</p>
             <div class="kiosk-chips pay" id="payment-chips"></div>
-            <p class="kiosk-intent">Nothing is charged on this screen. Tell us how you’d like to settle when you return.</p>
+            <p class="kiosk-intent">Intent only — nothing is charged on this iPad. Settle when you return.</p>
           </div>
         </div>
         <div class="kiosk-actions">
@@ -86,6 +111,22 @@
     const checkOut = document.getElementById("check-out");
     let pricePerMinute = 3;
     let defaultSession = "15";
+
+    function isStandalone() {
+      return (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.matchMedia("(display-mode: fullscreen)").matches ||
+        window.navigator.standalone === true
+      );
+    }
+
+    function syncInstallHint() {
+      const standalone = isStandalone();
+      const hint = document.getElementById("safari-hint");
+      document.body.classList.toggle("is-standalone", standalone);
+      document.body.classList.toggle("in-browser", !standalone);
+      if (hint) hint.hidden = standalone;
+    }
 
     function dollars(minutes) {
       return `$${minutes * pricePerMinute}`;
@@ -253,6 +294,12 @@
         : data.message;
     });
 
+    syncInstallHint();
+    ["standalone", "fullscreen"].forEach((mode) => {
+      const mq = window.matchMedia(`(display-mode: ${mode})`);
+      if (mq.addEventListener) mq.addEventListener("change", syncInstallHint);
+      else if (mq.addListener) mq.addListener(syncInstallHint);
+    });
     boot();
   </script>
 </body>
