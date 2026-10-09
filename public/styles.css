@@ -432,41 +432,45 @@ body.kiosk {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  width: min(1240px, calc(100% - 40px));
+  width: min(1240px, calc(100% - 48px));
   margin: 0 auto;
   padding:
-    max(16px, env(safe-area-inset-top))
-    max(8px, env(safe-area-inset-right))
-    max(14px, env(safe-area-inset-bottom))
-    max(8px, env(safe-area-inset-left));
+    max(24px, env(safe-area-inset-top))
+    max(12px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
+}
+.kiosk-intro {
+  margin: 0 0 22px;
+}
+.kiosk-mark {
+  display: block;
+  width: 48px;
+  height: auto;
+  margin: 0 0 14px;
 }
 .kiosk-install {
-  margin: 0 0 14px;
-  padding: 10px 14px 12px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: rgba(0, 16, 24, 0.78);
+  margin: 12px 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
   color: var(--muted);
-  font-size: clamp(0.92rem, 1.5vw, 1.05rem);
-  line-height: 1.45;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
 }
-.kiosk-install-kicker {
-  margin: 0 0 4px;
-  font-family: var(--font-display);
-  font-size: 0.68rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--cyan);
+.kiosk-copy p {
+  margin: 0 0 1em;
+  color: var(--ink);
+  font-size: clamp(0.98rem, 1.2vw, 1.08rem);
+  line-height: 1.6;
+  max-width: 42rem;
 }
-.kiosk-install p { margin: 0; }
-.kiosk-install strong { color: var(--ink); font-weight: 600; }
-.kiosk-share {
-  display: inline-block;
-  width: 1.05em;
-  height: 1.05em;
-  margin: 0 0.18em -0.12em;
+.kiosk-copy p:last-child { margin-bottom: 0; }
+.kiosk-copy strong {
   color: var(--cyan);
-  vertical-align: middle;
+  font-weight: 600;
+  white-space: nowrap;
 }
 body.is-standalone .kiosk-install,
 .kiosk-install[hidden] {
@@ -474,64 +478,6 @@ body.is-standalone .kiosk-install,
 }
 @media (display-mode: standalone), (display-mode: fullscreen) {
   .kiosk-install { display: none !important; }
-}
-.kiosk-mast {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  margin: 0 0 16px;
-}
-.kiosk-mark {
-  width: min(148px, 18vw);
-  height: auto;
-  flex: 0 0 auto;
-  filter: drop-shadow(0 0 18px rgba(0, 229, 255, 0.35));
-}
-.kiosk-brand { min-width: 0; }
-.kiosk-tag {
-  margin: 0 0 8px;
-  font-family: var(--font-display);
-  font-size: clamp(0.92rem, 2.1vw, 1.18rem);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--cyan);
-}
-.kiosk-soma {
-  margin: 0;
-  color: var(--ink);
-  font-size: clamp(1.12rem, 2.1vw, 1.38rem);
-  line-height: 1.4;
-  max-width: 46rem;
-}
-.kiosk-flow {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
-  margin: 0 0 18px;
-  padding: 0;
-  list-style: none;
-}
-.kiosk-flow li {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  min-height: 64px;
-  margin: 0;
-  padding: 10px 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.42);
-  color: var(--ink);
-  font-size: clamp(0.92rem, 1.45vw, 1.08rem);
-  line-height: 1.3;
-}
-.kiosk-flow span {
-  flex: 0 0 auto;
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  color: var(--cyan);
-  padding-top: 2px;
 }
 .kiosk-view { flex: 1; display: flex; flex-direction: column; }
 .kiosk-view.hidden { display: none; }
@@ -724,19 +670,13 @@ body.is-standalone .kiosk-install,
   font-size: 0.95rem;
 }
 
-@media (max-width: 1100px) {
-  .kiosk-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .kiosk-flow li:nth-child(4),
-  .kiosk-flow li:nth-child(5) { grid-column: span 1; }
-}
 @media (max-width: 920px), (orientation: portrait) {
   .kiosk-shell { width: min(720px, calc(100% - 32px)); }
   .kiosk-grid { grid-template-columns: 1fr; gap: 22px; }
   .kiosk-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .kiosk-chips.pay { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .kiosk-mark { width: 120px; }
-  .kiosk-flow { grid-template-columns: 1fr 1fr; }
-  .kiosk-soma { font-size: 1.12rem; }
+  .kiosk-mark { width: 44px; margin-bottom: 12px; }
+  .kiosk-copy p { font-size: 1rem; }
 }
 @media (display-mode: standalone), (display-mode: fullscreen) {
   .kiosk-shell {

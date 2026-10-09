@@ -29,36 +29,16 @@
 </head>
 <body class="kiosk">
   <div class="kiosk-shell">
-    <aside class="kiosk-install" id="safari-hint" role="note">
-      <p class="kiosk-install-kicker">This is still Safari</p>
-      <p>
-        Share
-        <svg class="kiosk-share" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 3v11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-          <path d="M8.2 6.6 12 2.8l3.8 3.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M7 10.5H6.2A2.2 2.2 0 0 0 4 12.7v7.1A2.2 2.2 0 0 0 6.2 22h11.6A2.2 2.2 0 0 0 20 19.8v-7.1a2.2 2.2 0 0 0-2.2-2.2H17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-        </svg>
-        (box with arrow) → Add to Home Screen → open the <strong>SOMA</strong> icon.
-        Then Guided Access: Settings → Accessibility → Guided Access On; open the icon; triple-click the side button → Start.
-      </p>
-    </aside>
-
-    <header class="kiosk-mast">
-      <img class="kiosk-mark" src="/brand/lockup-square.png" alt="SOMA Sanctuary" />
-      <div class="kiosk-brand">
-        <p class="kiosk-tag">SOMA Sanctuary · Somatic Return</p>
-        <p class="kiosk-soma">Focused therapeutic touch, here in the room. A brief recalibration so you can return to the event — not a spa appointment in another building.</p>
-      </div>
-    </header>
-
     <section id="join-view" class="kiosk-view">
-      <ol class="kiosk-flow" aria-label="What to expect">
-        <li><span>1</span> Fill this</li>
-        <li><span>2</span> Get a return time</li>
-        <li><span>3</span> Come back around then</li>
-        <li><span>4</span> Session 5 / 10 / 15 / 20 min · $3/min · nothing charged on this iPad</li>
-        <li><span>5</span> Check your time later on your phone</li>
-      </ol>
+      <header class="kiosk-intro">
+        <img class="kiosk-mark" src="/brand/lockup-square.png" alt="SOMA Sanctuary" />
+        <div class="kiosk-copy">
+          <p>I'm Nick, a New York State–licensed and registered Occupational Therapist. I've worked with professional athletic organizations, including the NFL and the New York Triathlon, and today my private practice in Manhattan serves New Yorkers ranging from Broadway performers to patients living with Parkinson's disease.</p>
+          <p>In recent years, I've developed a new modality specifically for nightlife called <strong>Somatic Return℠</strong>. Its premise is simple: to bring you back into your body, reconnect you with the present moment, and counter the overwhelm that can come with crowded, high-energy social environments.</p>
+          <p>Rather than leaving an event to self-regulate, give yourself 5–10 minutes for a focused session designed to restore a sense of ease, presence, and comfort—so you can get back to the party feeling more like yourself.</p>
+        </div>
+      </header>
+
       <form id="join-form" autocomplete="off">
         <div class="kiosk-grid">
           <div class="kiosk-who">
@@ -100,6 +80,8 @@
         <p class="kiosk-check-out" id="check-out"></p>
       </form>
     </footer>
+
+    <p class="kiosk-install" id="safari-hint" hidden>Share → Add to Home Screen, then Guided Access.</p>
   </div>
   <script>
     const errorEl = document.getElementById("error");
@@ -120,12 +102,17 @@
       );
     }
 
+    function isSafariBrowser() {
+      const ua = navigator.userAgent || "";
+      return /safari/i.test(ua) && !/chrome|chromium|crios|fxios|edg|edgios|opios|android/i.test(ua);
+    }
+
     function syncInstallHint() {
       const standalone = isStandalone();
       const hint = document.getElementById("safari-hint");
       document.body.classList.toggle("is-standalone", standalone);
       document.body.classList.toggle("in-browser", !standalone);
-      if (hint) hint.hidden = standalone;
+      if (hint) hint.hidden = standalone || !isSafariBrowser();
     }
 
     function dollars(minutes) {
