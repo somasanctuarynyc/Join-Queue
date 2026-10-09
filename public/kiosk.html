@@ -26,8 +26,123 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Exo+2:wght@400;500;600&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .kiosk-mote {
+      position: fixed;
+      top: max(6px, env(safe-area-inset-top));
+      left: max(6px, env(safe-area-inset-left));
+      z-index: 40;
+      width: 44px;
+      height: 44px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      box-shadow: none;
+      filter: none;
+      border-radius: 0;
+      color: transparent;
+    }
+    .kiosk-mote:hover,
+    .kiosk-mote:hover:not(:disabled),
+    .kiosk-mote:focus,
+    .kiosk-mote:focus-visible {
+      background: transparent;
+      box-shadow: none;
+      filter: none;
+      outline: none;
+      color: transparent;
+    }
+    .kiosk-mote::after {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #00e5ff;
+      opacity: 0.16;
+      box-shadow: 0 0 2px 1px rgba(0, 229, 255, 0.22);
+    }
+    .kiosk-saver {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: pointer;
+    }
+    .kiosk-saver[hidden] { display: none !important; }
+    .kiosk-saver-spine {
+      position: absolute;
+      left: max(28px, env(safe-area-inset-left));
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      pointer-events: none;
+    }
+    .kiosk-saver-spine span {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #00e5ff;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+      animation: kiosk-saver-dot 2.6s ease-in-out infinite;
+    }
+    .kiosk-saver-spine span:nth-child(1) { animation-delay: 0s; background: #7af6ff; }
+    .kiosk-saver-spine span:nth-child(2) { animation-delay: 0.12s; background: #3ceeff; }
+    .kiosk-saver-spine span:nth-child(3) { animation-delay: 0.24s; background: #00e5ff; }
+    .kiosk-saver-spine span:nth-child(4) { animation-delay: 0.36s; background: #12c8ff; }
+    .kiosk-saver-spine span:nth-child(5) { animation-delay: 0.48s; background: #1590ff; }
+    .kiosk-saver-spine span:nth-child(6) { animation-delay: 0.6s; background: #1570ff; }
+    .kiosk-saver-spine span:nth-child(7) { animation-delay: 0.72s; background: #1557ff; }
+    .kiosk-saver-spine span:nth-child(8) { animation-delay: 0.84s; background: #1248dd; }
+    .kiosk-saver-spine span:nth-child(9) { animation-delay: 0.96s; background: #0c36bb; }
+    .kiosk-saver-spine span:nth-child(10) { animation-delay: 1.08s; background: #082a99; }
+    .kiosk-saver-spine span:nth-child(11) { animation-delay: 1.2s; background: #0620aa; }
+    .kiosk-saver-lockup {
+      display: block;
+      width: min(88vw, 1040px);
+      height: auto;
+      max-height: 46vh;
+      object-fit: contain;
+      pointer-events: none;
+      animation: kiosk-saver-breathe 5.2s ease-in-out infinite;
+    }
+    @keyframes kiosk-saver-dot {
+      0%, 100% { transform: scale(0.7); opacity: 0.32; }
+      50% { transform: scale(1.18); opacity: 1; }
+    }
+    @keyframes kiosk-saver-breathe {
+      0%, 100% { filter: drop-shadow(0 0 16px rgba(0, 229, 255, 0.22)); opacity: 0.9; }
+      50% { filter: drop-shadow(0 0 34px rgba(0, 229, 255, 0.48)); opacity: 1; }
+    }
+    @media (max-width: 720px), (orientation: portrait) {
+      .kiosk-saver-spine { display: none; }
+      .kiosk-saver-lockup { max-height: 38vh; }
+    }
+  </style>
 </head>
 <body class="kiosk">
+  <button type="button" class="kiosk-mote" id="kiosk-mote" aria-hidden="true" tabindex="-1"></button>
+  <div id="kiosk-saver" class="kiosk-saver" hidden aria-hidden="true">
+    <div class="kiosk-saver-spine" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <img class="kiosk-saver-lockup" src="/brand/lockup-wide.png" alt="SOMA Sanctuary" draggable="false" />
+  </div>
   <div class="kiosk-shell">
     <div class="kiosk-top">
       <a class="kiosk-logo" href="https://www.somasanctuary.nyc" target="_blank" rel="noreferrer">
@@ -315,6 +430,61 @@
         : data.message;
     });
 
+    const IDLE_MS = 10 * 60 * 1000;
+    const saverEl = document.getElementById("kiosk-saver");
+    const moteEl = document.getElementById("kiosk-mote");
+    let idleTimer = 0;
+    let saverOn = false;
+
+    function armIdle() {
+      window.clearTimeout(idleTimer);
+      if (saverOn) return;
+      idleTimer = window.setTimeout(showSaver, IDLE_MS);
+    }
+
+    function showSaver() {
+      if (saverOn) return;
+      saverOn = true;
+      window.clearTimeout(idleTimer);
+      saverEl.hidden = false;
+      saverEl.setAttribute("aria-hidden", "false");
+    }
+
+    function hideSaver() {
+      if (!saverOn) return;
+      saverOn = false;
+      saverEl.hidden = true;
+      saverEl.setAttribute("aria-hidden", "true");
+      armIdle();
+    }
+
+    function onIdleActivity() {
+      if (saverOn) return;
+      armIdle();
+    }
+
+    function consume(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    ["pointerdown", "touchstart", "keydown"].forEach((type) => {
+      document.addEventListener(type, onIdleActivity, { capture: true, passive: true });
+    });
+
+    moteEl.addEventListener("pointerdown", (e) => {
+      consume(e);
+      showSaver();
+    });
+    moteEl.addEventListener("click", consume);
+
+    saverEl.addEventListener("pointerdown", consume, true);
+    saverEl.addEventListener("pointerup", consume, true);
+    saverEl.addEventListener("click", (e) => {
+      consume(e);
+      hideSaver();
+    }, true);
+
     syncInstallHint();
     ["standalone", "fullscreen"].forEach((mode) => {
       const mq = window.matchMedia(`(display-mode: ${mode})`);
@@ -322,6 +492,7 @@
       else if (mq.addListener) mq.addListener(syncInstallHint);
     });
     boot();
+    armIdle();
   </script>
 </body>
 </html>
