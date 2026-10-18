@@ -173,30 +173,42 @@
       border-radius: 50%;
     }
     .kiosk-chips.exp {
-      grid-template-columns: 1.4fr 0.8fr;
+      grid-template-columns: 1fr auto;
+      align-items: end;
       margin-bottom: 16px;
     }
+    .kiosk-chip-red span {
+      min-height: 44px;
+      min-width: 0;
+      padding: 10px 6px 8px;
+      border-color: transparent;
+      background: transparent;
+      color: rgba(196, 90, 104, 0.38);
+      font-size: 0.72rem;
+      letter-spacing: 0.34em;
+      box-shadow: none;
+    }
     .kiosk-chip-red input:checked + span {
-      background: #b10f24;
-      color: #fff;
-      border-color: #ff4d6d;
-      box-shadow: 0 0 22px rgba(177, 15, 36, 0.45);
+      background: transparent;
+      color: rgba(227, 107, 122, 0.82);
+      border-color: rgba(177, 15, 36, 0.28);
+      box-shadow: none;
     }
     button.kiosk-red-jump {
       width: auto;
       min-width: 0;
-      min-height: 48px;
+      min-height: 44px;
       margin: 0;
-      padding: 10px 18px;
-      border: 1px solid rgba(255, 77, 109, 0.55);
-      border-radius: 999px;
-      background: #000;
-      color: #e36b7a;
+      padding: 8px 2px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: rgba(177, 15, 36, 0.38);
       cursor: pointer;
       font-family: var(--font-display);
-      letter-spacing: 0.22em;
+      letter-spacing: 0.36em;
       text-transform: uppercase;
-      font-size: 0.86rem;
+      font-size: 0.68rem;
       box-shadow: none;
       filter: none;
     }
@@ -204,73 +216,89 @@
     button.kiosk-red-jump:hover:not(:disabled),
     button.kiosk-red-jump:focus,
     button.kiosk-red-jump:focus-visible {
-      color: #ff8a9a;
-      border-color: #ff4d6d;
-      background: #000;
+      color: rgba(227, 107, 122, 0.7);
+      background: transparent;
       box-shadow: none;
       filter: none;
       outline: none;
-    }
-    .kiosk-about-tabs {
-      display: grid;
-      grid-template-columns: 1.4fr 0.8fr;
-      gap: 12px;
-      margin: 0 0 22px;
-    }
-    .kiosk-about-tab {
-      min-height: 56px;
-      margin: 0;
-      padding: 10px 14px;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      background: rgba(0, 0, 0, 0.5);
-      color: var(--ink);
-      cursor: pointer;
-      font-family: var(--font-display);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-size: clamp(0.9rem, 1.5vw, 1.05rem);
-      box-shadow: none;
-      filter: none;
-    }
-    .kiosk-about-tab:hover,
-    .kiosk-about-tab:hover:not(:disabled),
-    .kiosk-about-tab:focus,
-    .kiosk-about-tab:focus-visible {
-      background: rgba(0, 0, 0, 0.5);
-      box-shadow: none;
-      filter: none;
-      outline: none;
-    }
-    .kiosk-about-tab.is-on {
-      background: var(--cyan);
-      color: #001016;
-      border-color: var(--cyan);
-      box-shadow: var(--glow);
-    }
-    .kiosk-about-tab-red.is-on,
-    .kiosk-about-tab-red.is-on:hover,
-    .kiosk-about-tab-red.is-on:focus-visible {
-      background: #b10f24;
-      color: #fff;
-      border-color: #ff4d6d;
-      box-shadow: 0 0 18px rgba(177, 15, 36, 0.35);
     }
     .kiosk-about-pane[hidden],
-    .kiosk-about-tabs[hidden],
+    .kiosk-about-red-mark[hidden],
     .kiosk-red-jump[hidden] {
       display: none !important;
     }
     .kiosk-about-pane h2 {
       margin: 0 0 0.7em;
-      color: #ff4d6d;
+      color: rgba(196, 90, 104, 0.78);
       font-family: var(--font-display);
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      font-size: clamp(0.92rem, 1.6vw, 1.12rem);
+      font-weight: 500;
     }
     .kiosk-about-pane p.kiosk-red-consent {
       color: var(--ink);
+    }
+    button.kiosk-about-red-mark {
+      display: inline-block;
+      margin: -12px -6px -12px 0.2em;
+      padding: 14px 10px;
+      border: 0;
+      background: transparent;
+      color: rgba(177, 15, 36, 0.4);
+      cursor: pointer;
+      font-family: var(--font-display);
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      vertical-align: 0.08em;
+      box-shadow: none;
+      filter: none;
+      min-width: 44px;
+      min-height: 44px;
+    }
+    button.kiosk-about-red-mark:hover,
+    button.kiosk-about-red-mark:hover:not(:disabled),
+    button.kiosk-about-red-mark:focus,
+    button.kiosk-about-red-mark:focus-visible {
+      color: rgba(227, 107, 122, 0.72);
+      background: transparent;
+      box-shadow: none;
+      filter: none;
+      outline: none;
+    }
+    button.kiosk-about-hairline {
+      display: block;
+      width: 100%;
+      max-width: 38rem;
+      height: 28px;
+      margin: 0 0 1.1em;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+      box-shadow: none;
+      filter: none;
+      min-height: 0;
+    }
+    button.kiosk-about-hairline::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 42%;
+      top: 50%;
+      height: 1px;
+      background: rgba(177, 15, 36, 0.22);
+    }
+    button.kiosk-about-hairline:hover,
+    button.kiosk-about-hairline:hover:not(:disabled),
+    button.kiosk-about-hairline:focus,
+    button.kiosk-about-hairline:focus-visible {
+      background: transparent;
+      box-shadow: none;
+      filter: none;
+      outline: none;
     }
   </style>
 </head>
@@ -331,16 +359,13 @@
     </section>
 
     <section id="about-view" class="kiosk-view kiosk-about hidden">
-      <div class="kiosk-about-tabs" id="about-tabs" hidden>
-        <button type="button" class="kiosk-about-tab is-on" id="about-tab-standard" data-about="standard">Somatic Return</button>
-        <button type="button" class="kiosk-about-tab kiosk-about-tab-red" id="about-tab-red" data-about="red">RED</button>
-      </div>
       <div id="about-standard" class="kiosk-about-pane">
         <p>I'm Nick, a New York State–licensed and registered Occupational Therapist. I've worked with professional athletic organizations, including the NFL and the New York Triathlon, and today my private practice in Manhattan serves New Yorkers ranging from Broadway performers to patients living with Parkinson's disease.</p>
         <p>In recent years, I've developed a new modality specifically for nightlife called <span class="kiosk-sr">Somatic Return℠</span>. Its premise is simple: to bring you back into your body, reconnect you with the present moment, and counter the overwhelm that can come with crowded, high-energy social environments.</p>
-        <p>Rather than leaving an event to self-regulate, give yourself 5–10 minutes for a focused session designed to restore a sense of ease, presence, and comfort—so you can get back to the party feeling more like you.</p>
+        <p>Rather than leaving an event to self-regulate, give yourself 5–10 minutes for a focused session designed to restore a sense of ease, presence, and comfort—so you can get back to the party feeling more like you.<button type="button" class="kiosk-about-red-mark" id="about-open-red" hidden>RED</button></p>
       </div>
       <div id="about-red" class="kiosk-about-pane" hidden>
+        <button type="button" class="kiosk-about-hairline" id="about-open-standard" aria-label="Somatic Return"></button>
         <h2>SOMATIC RETURN: RED</h2>
         <p>An impact-based sensory experience by Soma Sanctuary.</p>
         <p>RED explores a more intense pathway to Somatic Return through deliberate, controlled percussive touch using leather implements. By shifting the body's sensory focus, the experience is designed to interrupt habitual patterns of tension and attention, creating an opportunity for heightened present-moment awareness and a different relationship to bodily sensation.</p>
@@ -458,20 +483,16 @@
       const wantRed = redUnlocked && section === "red";
       const standardPane = document.getElementById("about-standard");
       const redPane = document.getElementById("about-red");
-      const tabStd = document.getElementById("about-tab-standard");
-      const tabRed = document.getElementById("about-tab-red");
       if (standardPane) standardPane.hidden = wantRed;
       if (redPane) redPane.hidden = !wantRed;
-      if (tabStd) tabStd.classList.toggle("is-on", !wantRed);
-      if (tabRed) tabRed.classList.toggle("is-on", wantRed);
       if (redUnlocked) setExperience(wantRed ? "red" : "standard");
     }
 
     function syncRedUi() {
       const block = document.getElementById("experience-block");
-      const tabs = document.getElementById("about-tabs");
+      const redMark = document.getElementById("about-open-red");
       if (block) block.hidden = !redUnlocked;
-      if (tabs) tabs.hidden = !redUnlocked;
+      if (redMark) redMark.hidden = !redUnlocked;
       if (!redUnlocked) {
         setExperience("standard");
         setAboutSection("standard");
@@ -591,10 +612,13 @@
     learnMoreBtn.addEventListener("click", () => showAbout());
     redJumpBtn.addEventListener("click", () => showAbout("red"));
     aboutBackBtn.addEventListener("click", () => showJoin());
-    document.getElementById("about-tabs").addEventListener("click", (e) => {
-      const tab = e.target.closest("[data-about]");
-      if (!tab || !redUnlocked) return;
-      setAboutSection(tab.getAttribute("data-about"));
+    document.getElementById("about-open-red").addEventListener("click", () => {
+      if (!redUnlocked) return;
+      setAboutSection("red");
+    });
+    document.getElementById("about-open-standard").addEventListener("click", () => {
+      if (!redUnlocked) return;
+      setAboutSection("standard");
     });
 
     joinForm.addEventListener("submit", async (e) => {
