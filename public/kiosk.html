@@ -206,6 +206,74 @@
       color: var(--ink);
     }
     .kiosk-red-copy p:last-child { margin-bottom: 0; }
+    button.kiosk-about-red-jump {
+      display: inline-flex;
+      align-self: flex-start;
+      margin: 0 0 18px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      min-width: 0;
+      min-height: 0;
+      background: transparent;
+      color: #ff4d6d;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      box-shadow: none;
+      filter: none;
+      font-family: var(--font-display);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-size: clamp(0.92rem, 1.6vw, 1.12rem);
+    }
+    button.kiosk-about-red-jump:hover,
+    button.kiosk-about-red-jump:hover:not(:disabled),
+    button.kiosk-about-red-jump:focus,
+    button.kiosk-about-red-jump:focus-visible {
+      background: transparent;
+      color: #ff6b84;
+      box-shadow: none;
+      filter: none;
+      outline: none;
+    }
+    button.kiosk-about-red-jump[hidden] { display: none !important; }
+    .kiosk-about-red {
+      margin: 28px 0 0;
+      padding: 22px 20px 20px;
+      max-width: 38rem;
+      border: 1px solid rgba(255, 77, 109, 0.32);
+      border-left: 3px solid #ff4d6d;
+      background: rgba(177, 15, 36, 0.08);
+      cursor: pointer;
+    }
+    .kiosk-about-red[hidden] { display: none !important; }
+    .kiosk-about-red.is-selected {
+      border-color: #ff4d6d;
+      box-shadow: 0 0 22px rgba(177, 15, 36, 0.35);
+    }
+    .kiosk-about-red h2 {
+      margin: 0 0 12px;
+      color: #ff4d6d;
+      font-family: var(--font-display);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: clamp(0.98rem, 1.7vw, 1.18rem);
+    }
+    .kiosk-about-red p {
+      margin: 0 0 0.85em;
+      max-width: none;
+      color: #d8cfd0;
+      font-size: clamp(1.12rem, 2vw, 1.38rem);
+      line-height: 1.5;
+      font-weight: 400;
+    }
+    .kiosk-about-red p.kiosk-red-consent { color: var(--ink); }
+    .kiosk-about-red p:last-child { margin-bottom: 0; }
+    @media (max-width: 920px), (orientation: portrait) {
+      .kiosk-about-red { max-width: none; }
+    }
   </style>
 </head>
 <body class="kiosk">
@@ -271,9 +339,17 @@
     </section>
 
     <section id="about-view" class="kiosk-view kiosk-about hidden">
+      <button type="button" class="kiosk-about-red-jump" id="about-red-jump" hidden>RED</button>
       <p>I'm Nick, a New York State–licensed and registered Occupational Therapist. I've worked with professional athletic organizations, including the NFL and the New York Triathlon, and today my private practice in Manhattan serves New Yorkers ranging from Broadway performers to patients living with Parkinson's disease.</p>
       <p>In recent years, I've developed a new modality specifically for nightlife called <span class="kiosk-sr">Somatic Return℠</span>. Its premise is simple: to bring you back into your body, reconnect you with the present moment, and counter the overwhelm that can come with crowded, high-energy social environments.</p>
       <p>Rather than leaving an event to self-regulate, give yourself 5–10 minutes for a focused session designed to restore a sense of ease, presence, and comfort—so you can get back to the party feeling more like you.</p>
+      <article class="kiosk-about-red" id="about-red" hidden>
+        <h2>SOMATIC RETURN: RED</h2>
+        <p>An impact-based sensory experience by Soma Sanctuary.</p>
+        <p>RED explores a more intense pathway to Somatic Return through deliberate, controlled percussive touch using leather implements. By shifting the body's sensory focus, the experience is designed to interrupt habitual patterns of tension and attention, creating an opportunity for heightened present-moment awareness and a different relationship to bodily sensation.</p>
+        <p class="kiosk-red-consent">The experience is consent-led, individually calibrated, and grounded in clear communication between practitioner and participant.</p>
+        <p>Same method. Different intensity.</p>
+      </article>
     </section>
 
     <section id="result-view" class="kiosk-view kiosk-result hidden">
@@ -377,8 +453,15 @@
 
     function syncRedCopy() {
       const copy = document.getElementById("red-copy");
-      if (!copy) return;
-      copy.hidden = !(redUnlocked && selectedExperience() === "red");
+      const aboutRed = document.getElementById("about-red");
+      const aboutJump = document.getElementById("about-red-jump");
+      const redOn = redUnlocked && selectedExperience() === "red";
+      if (copy) copy.hidden = !redOn;
+      if (aboutJump) aboutJump.hidden = !redUnlocked;
+      if (aboutRed) {
+        aboutRed.hidden = !redUnlocked;
+        aboutRed.classList.toggle("is-selected", redOn);
+      }
     }
 
     function unlockRed(e) {
@@ -395,6 +478,10 @@
         if (standard) standard.checked = true;
       }
       syncRedCopy();
+      if (!aboutView.classList.contains("hidden")) {
+        const aboutRed = document.getElementById("about-red");
+        if (aboutRed) aboutRed.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
 
     function lockRed() {
@@ -403,6 +490,13 @@
       if (block) block.hidden = true;
       const standard = document.querySelector('input[name="experience"][value="standard"]');
       if (standard) standard.checked = true;
+      syncRedCopy();
+    }
+
+    function selectRedExperience() {
+      if (!redUnlocked) return;
+      const red = document.querySelector('input[name="experience"][value="red"]');
+      if (red) red.checked = true;
       syncRedCopy();
     }
 
@@ -488,6 +582,11 @@
 
     learnMoreBtn.addEventListener("click", showAbout);
     aboutBackBtn.addEventListener("click", () => showJoin());
+    document.getElementById("about-red-jump").addEventListener("click", () => {
+      const aboutRed = document.getElementById("about-red");
+      if (aboutRed) aboutRed.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    document.getElementById("about-red").addEventListener("click", selectRedExperience);
 
     joinForm.addEventListener("submit", async (e) => {
       e.preventDefault();
