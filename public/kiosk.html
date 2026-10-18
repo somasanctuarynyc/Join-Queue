@@ -194,37 +194,8 @@
       border-color: rgba(177, 15, 36, 0.28);
       box-shadow: none;
     }
-    button.kiosk-red-jump {
-      width: auto;
-      min-width: 0;
-      min-height: 44px;
-      margin: 0;
-      padding: 8px 2px;
-      border: 0;
-      border-radius: 0;
-      background: transparent;
-      color: rgba(177, 15, 36, 0.38);
-      cursor: pointer;
-      font-family: var(--font-display);
-      letter-spacing: 0.36em;
-      text-transform: uppercase;
-      font-size: 0.68rem;
-      box-shadow: none;
-      filter: none;
-    }
-    button.kiosk-red-jump:hover,
-    button.kiosk-red-jump:hover:not(:disabled),
-    button.kiosk-red-jump:focus,
-    button.kiosk-red-jump:focus-visible {
-      color: rgba(227, 107, 122, 0.7);
-      background: transparent;
-      box-shadow: none;
-      filter: none;
-      outline: none;
-    }
     .kiosk-about-pane[hidden],
-    .kiosk-about-red-mark[hidden],
-    .kiosk-red-jump[hidden] {
+    .kiosk-about-red-mark[hidden] {
       display: none !important;
     }
     .kiosk-about-pane h2 {
@@ -324,7 +295,6 @@
       <div class="kiosk-top-end">
         <p class="kiosk-install" id="safari-hint" hidden>Share → Add to Home Screen, then Guided Access.</p>
         <button type="button" class="kiosk-learn" id="learn-more">Learn more</button>
-        <button type="button" class="kiosk-red-jump" id="red-jump" hidden>RED</button>
         <button type="button" class="kiosk-more" id="about-back" hidden>Back</button>
       </div>
     </div>
@@ -402,7 +372,6 @@
     const checkForm = document.getElementById("check-form");
     const checkOut = document.getElementById("check-out");
     const learnMoreBtn = document.getElementById("learn-more");
-    const redJumpBtn = document.getElementById("red-jump");
     const aboutBackBtn = document.getElementById("about-back");
     const kioskFoot = document.getElementById("kiosk-foot");
     let pricePerMinute = 3;
@@ -479,13 +448,13 @@
       if (radio) radio.checked = true;
     }
 
-    function setAboutSection(section) {
+    function setAboutSection(section, syncChoice = false) {
       const wantRed = redUnlocked && section === "red";
       const standardPane = document.getElementById("about-standard");
       const redPane = document.getElementById("about-red");
       if (standardPane) standardPane.hidden = wantRed;
       if (redPane) redPane.hidden = !wantRed;
-      if (redUnlocked) setExperience(wantRed ? "red" : "standard");
+      if (syncChoice && redUnlocked) setExperience(wantRed ? "red" : "standard");
     }
 
     function syncRedUi() {
@@ -496,15 +465,7 @@
       if (!redUnlocked) {
         setExperience("standard");
         setAboutSection("standard");
-      } else {
-        setAboutSection(selectedExperience());
       }
-      syncRedJump();
-    }
-
-    function syncRedJump() {
-      if (!redJumpBtn) return;
-      redJumpBtn.hidden = !redUnlocked || joinView.classList.contains("hidden");
     }
 
     function unlockRed(e) {
@@ -516,6 +477,7 @@
       redUnlocked = true;
       if (!wasUnlocked) setExperience("standard");
       syncRedUi();
+      if (!aboutView.classList.contains("hidden")) setAboutSection("red", true);
     }
 
     function lockRed() {
@@ -534,13 +496,12 @@
       errorEl.classList.add("hidden");
       errorEl.textContent = "";
       joinBtn.disabled = false;
-      syncRedJump();
       if (focusName) document.getElementById("name").focus();
     }
 
     function showAbout(section) {
-      const pane = redUnlocked ? (section || selectedExperience()) : "standard";
-      setAboutSection(pane);
+      const pane = redUnlocked && section === "red" ? "red" : "standard";
+      setAboutSection(pane, pane === "red");
       joinView.classList.add("hidden");
       resultView.classList.add("hidden");
       aboutView.classList.remove("hidden");
@@ -549,7 +510,6 @@
       aboutBackBtn.hidden = false;
       kioskFoot.hidden = true;
       aboutView.scrollTop = 0;
-      syncRedJump();
     }
 
     function resetForNextGuest() {
@@ -610,15 +570,14 @@
     });
 
     learnMoreBtn.addEventListener("click", () => showAbout());
-    redJumpBtn.addEventListener("click", () => showAbout("red"));
     aboutBackBtn.addEventListener("click", () => showJoin());
     document.getElementById("about-open-red").addEventListener("click", () => {
       if (!redUnlocked) return;
-      setAboutSection("red");
+      setAboutSection("red", true);
     });
     document.getElementById("about-open-standard").addEventListener("click", () => {
       if (!redUnlocked) return;
-      setAboutSection("standard");
+      setAboutSection("standard", true);
     });
 
     joinForm.addEventListener("submit", async (e) => {
@@ -672,7 +631,6 @@
         learnMoreBtn.hidden = true;
         aboutBackBtn.hidden = true;
         kioskFoot.hidden = false;
-        syncRedJump();
       } catch {
         errorEl.textContent = "Could not join. Check the connection and try again.";
         errorEl.classList.remove("hidden");
