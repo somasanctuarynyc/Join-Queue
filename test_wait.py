@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from store import SESSION_OPTIONS, attach_estimates, wait_minutes_ahead, waiting_clients
+from store import SESSION_OPTIONS, add_client, attach_estimates, wait_minutes_ahead, waiting_clients
 
 
 TZ = ZoneInfo("America/New_York")
@@ -24,6 +24,30 @@ def client(cid, minutes, joined):
 class SessionOptionsTests(unittest.TestCase):
     def test_session_lengths(self):
         self.assertEqual(SESSION_OPTIONS, (5, 10, 15, 20))
+
+
+class ExperienceTests(unittest.TestCase):
+    def test_add_client_defaults_standard(self):
+        state = {"clients": []}
+        row = add_client(state, "Ada", "5550000001", 15, "Cash")
+        self.assertEqual(row["experience"], "standard")
+        self.assertEqual(len(state["clients"]), 1)
+
+    def test_add_client_red(self):
+        state = {"clients": []}
+        row = add_client(state, "Ada", "5550000001", 15, "Cash", "red")
+        self.assertEqual(row["experience"], "red")
+
+    def test_waiting_without_experience_still_estimates(self):
+        state = {
+            "clients": [
+                client("a", 15, "2026-09-26T12:00:00-04:00"),
+            ]
+        }
+        at = datetime(2026, 9, 26, 12, 10, tzinfo=TZ)
+        rows = attach_estimates(state, at)
+        self.assertEqual(rows[0]["wait_minutes"], 0)
+        self.assertNotIn("experience", rows[0])
 
 
 class WaitMathTests(unittest.TestCase):

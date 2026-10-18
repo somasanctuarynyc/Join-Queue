@@ -300,6 +300,7 @@ class Handler(SimpleHTTPRequestHandler):
         name = str(body.get("name") or "").strip()
         phone = normalize_phone(str(body.get("phone") or ""))
         payment = str(body.get("payment") or "").strip()
+        experience = "red" if str(body.get("experience") or "").strip().lower() == "red" else "standard"
         try:
             session_minutes = int(body.get("session_minutes"))
         except (TypeError, ValueError):
@@ -334,7 +335,7 @@ class Handler(SimpleHTTPRequestHandler):
                             f"{est['return_label']}."
                         ),
                     }
-            client = add_client(state, name, phone, session_minutes, payment)
+            client = add_client(state, name, phone, session_minutes, payment, experience)
             est = estimate_for(state, client)
             return {
                 "already_in_line": False,

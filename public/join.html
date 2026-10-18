@@ -28,7 +28,7 @@
         <a class="brand-wordmark" href="https://www.somasanctuary.nyc">
           <img class="wordmark" src="/brand/wordmark.png" alt="SOMA Sanctuary" />
         </a>
-        <p class="tagline">Release · Restore · Return</p>
+        <p class="tagline">Release · Restore · <button type="button" class="join-red-hit" id="join-red-unlock">Return</button></p>
         <a class="site" href="https://www.somasanctuary.nyc" target="_blank" rel="noreferrer">www.somasanctuary.nyc</a>
       </div>
     </header>
@@ -40,6 +40,20 @@
       <input id="name" name="name" autocomplete="name" required />
       <label for="phone">Phone</label>
       <input id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="5551234567" required />
+      <div id="experience-block" hidden>
+        <label>Experience</label>
+        <div class="join-exp">
+          <label><input type="radio" name="experience" value="standard" checked /> Somatic Return</label>
+          <label><input type="radio" name="experience" value="red" /> RED</label>
+        </div>
+        <div class="join-red-copy" id="red-copy" hidden>
+          <h2>SOMATIC RETURN: RED</h2>
+          <p>An impact-based sensory experience by Soma Sanctuary.</p>
+          <p>RED explores a more intense pathway to Somatic Return through deliberate, controlled percussive touch using leather implements. By shifting the body's sensory focus, the experience is designed to interrupt habitual patterns of tension and attention, creating an opportunity for heightened present-moment awareness and a different relationship to bodily sensation.</p>
+          <p class="join-red-consent">The experience is consent-led, individually calibrated, and grounded in clear communication between practitioner and participant.</p>
+          <p>Same method. Different intensity.</p>
+        </div>
+      </div>
       <label for="session">Session length</label>
       <select id="session" name="session_minutes" required></select>
       <p class="price-note" id="price-note">$3 a minute</p>
@@ -67,6 +81,25 @@
     const errorEl = document.getElementById("error");
     const result = document.getElementById("result");
     let pricePerMinute = 3;
+    let redUnlocked = false;
+    function selectedExperience() {
+      if (!redUnlocked) return "standard";
+      const node = document.querySelector('input[name="experience"]:checked');
+      return node ? node.value : "standard";
+    }
+    function syncRedCopy() {
+      document.getElementById("red-copy").hidden = !(redUnlocked && selectedExperience() === "red");
+    }
+    function unlockRed() {
+      const wasUnlocked = redUnlocked;
+      redUnlocked = true;
+      document.getElementById("experience-block").hidden = false;
+      if (!wasUnlocked) {
+        const standard = document.querySelector('input[name="experience"][value="standard"]');
+        if (standard) standard.checked = true;
+      }
+      syncRedCopy();
+    }
     function dollars(minutes) {
       return `$${minutes * pricePerMinute}`;
     }
@@ -88,6 +121,11 @@
       session.value = "15";
       payment.innerHTML = meta.payments.map((p) => `<option>${p}</option>`).join("");
       session.addEventListener("change", updatePrice);
+      document.getElementById("join-red-unlock").addEventListener("click", (e) => {
+        e.preventDefault();
+        unlockRed();
+      });
+      document.getElementById("experience-block").addEventListener("change", syncRedCopy);
       updatePrice();
     }
     document.getElementById("join-form").addEventListener("submit", async (e) => {
@@ -100,6 +138,7 @@
         phone: document.getElementById("phone").value,
         session_minutes: sessionMinutes,
         payment: document.getElementById("payment").value,
+        experience: selectedExperience(),
       };
       const res = await fetch("/api/join", {
         method: "POST",

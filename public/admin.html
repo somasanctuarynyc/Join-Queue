@@ -112,7 +112,7 @@
         : "Public display: off";
       document.getElementById("waiting-body").innerHTML = data.waiting.map((c) => `
         <tr>
-          <td>${escapeHtml(c.name)}</td>
+          <td>${escapeHtml(c.name)}${redBadge(c)}</td>
           <td>${escapeHtml(c.phone_display || c.phone)}</td>
           <td>${c.session_minutes} min</td>
           <td>${escapeHtml(c.payment)}</td>
@@ -125,7 +125,7 @@
       `).join("") || `<tr><td colspan="6" class="muted">No one waiting.</td></tr>`;
       document.getElementById("other-body").innerHTML = data.others.map((c) => `
         <tr>
-          <td>${escapeHtml(c.name)}</td>
+          <td>${escapeHtml(c.name)}${redBadge(c)}</td>
           <td>${escapeHtml(c.phone_display || c.phone)}</td>
           <td>${c.status === "done" ? "Seen" : "Not seen"}</td>
           <td>${escapeHtml(c.payment)}</td>
@@ -137,6 +137,10 @@
       return String(value).replace(/[&<>"']/g, (ch) => ({
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
       }[ch]));
+    }
+
+    function redBadge(c) {
+      return c.experience === "red" ? ' <span class="red-badge">RED</span>' : "";
     }
 
     document.getElementById("login-form").addEventListener("submit", async (e) => {

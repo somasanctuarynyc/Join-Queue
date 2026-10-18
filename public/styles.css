@@ -90,6 +90,60 @@ body {
   color: var(--cyan);
   text-transform: uppercase;
 }
+button.join-red-hit {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  box-shadow: none;
+  filter: none;
+}
+button.join-red-hit:hover,
+button.join-red-hit:hover:not(:disabled),
+button.join-red-hit:focus,
+button.join-red-hit:focus-visible {
+  color: inherit;
+  background: none;
+  box-shadow: none;
+  filter: none;
+  outline: none;
+}
+.join-exp {
+  display: flex;
+  gap: 16px;
+  margin: 0 0 12px;
+  flex-wrap: wrap;
+}
+.join-exp label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-family: var(--font-body);
+}
+.join-red-copy {
+  margin: 0 0 16px;
+  color: #d8cfd0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.join-red-copy h2 {
+  margin: 0 0 8px;
+  color: #ff4d6d;
+  font-size: 0.92rem;
+}
+.join-red-copy p { margin: 0 0 0.7em; }
+.join-red-copy p.join-red-consent { color: var(--ink); }
+.join-red-copy p:last-child { margin-bottom: 0; }
 .site {
   display: inline-block;
   color: var(--cyan-2);
@@ -455,15 +509,38 @@ body.kiosk {
   min-width: 0;
   line-height: 0;
 }
+.kiosk-logo-frame {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  line-height: 0;
+}
 .kiosk-logo img {
   display: block;
-  width: 100%;
-  max-width: 1040px;
+  width: auto;
+  max-width: 100%;
   height: auto;
   max-height: 188px;
   object-fit: contain;
   object-position: left center;
   filter: drop-shadow(0 0 18px rgba(0, 229, 255, 0.32));
+}
+.kiosk-logo-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.red-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 7px 1px;
+  border-radius: 2px;
+  background: #b10f24;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  vertical-align: 1px;
 }
 .kiosk-top-end {
   margin-left: auto;
@@ -777,6 +854,7 @@ body.is-standalone .kiosk-install,
     max-height: 150px;
     object-position: center;
   }
+  .kiosk-logo-frame { display: block; margin: 0 auto; }
   .kiosk-top-end { margin-left: 0; justify-content: center; }
   .kiosk-about p { font-size: 1.28rem; max-width: none; }
 }

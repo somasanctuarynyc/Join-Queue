@@ -132,6 +132,80 @@
       .kiosk-saver-spine { display: none; }
       .kiosk-saver-lockup { max-height: 38vh; }
     }
+    button.kiosk-red-hit {
+      position: absolute;
+      z-index: 2;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      min-width: 0;
+      min-height: 0;
+      background: transparent;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      box-shadow: none;
+      filter: none;
+      color: transparent;
+    }
+    button.kiosk-red-hit:hover,
+    button.kiosk-red-hit:hover:not(:disabled),
+    button.kiosk-red-hit:focus,
+    button.kiosk-red-hit:focus-visible {
+      background: transparent;
+      box-shadow: none;
+      filter: none;
+      outline: none;
+      color: transparent;
+    }
+    .kiosk-red-return {
+      left: 81%;
+      top: 52%;
+      width: 18%;
+      height: 32%;
+    }
+    .kiosk-red-bullet {
+      left: 80.4%;
+      top: 61%;
+      width: 3.2%;
+      height: 16%;
+      border-radius: 50%;
+    }
+    .kiosk-chips.exp {
+      grid-template-columns: 1.4fr 0.8fr;
+      margin-bottom: 16px;
+    }
+    .kiosk-chip-red input:checked + span {
+      background: #b10f24;
+      color: #fff;
+      border-color: #ff4d6d;
+      box-shadow: 0 0 22px rgba(177, 15, 36, 0.45);
+    }
+    .kiosk-red-copy {
+      margin: 0 0 20px;
+      max-height: min(30vh, 260px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 8px;
+    }
+    .kiosk-red-copy h2 {
+      margin: 0 0 10px;
+      color: #ff4d6d;
+      font-size: clamp(0.92rem, 1.6vw, 1.12rem);
+    }
+    .kiosk-red-copy p {
+      margin: 0 0 0.75em;
+      color: #d8cfd0;
+      font-size: clamp(0.95rem, 1.5vw, 1.08rem);
+      line-height: 1.45;
+      font-weight: 400;
+      max-width: none;
+    }
+    .kiosk-red-copy p.kiosk-red-consent {
+      color: var(--ink);
+    }
+    .kiosk-red-copy p:last-child { margin-bottom: 0; }
   </style>
 </head>
 <body class="kiosk">
@@ -145,9 +219,14 @@
   </div>
   <div class="kiosk-shell">
     <div class="kiosk-top">
-      <a class="kiosk-logo" href="https://www.somasanctuary.nyc" target="_blank" rel="noreferrer">
-        <img src="/brand/lockup-wide.png" alt="SOMA Sanctuary" />
-      </a>
+      <div class="kiosk-logo">
+        <span class="kiosk-logo-frame">
+          <img src="/brand/lockup-wide.png" alt="SOMA Sanctuary" />
+          <a class="kiosk-logo-link" href="https://www.somasanctuary.nyc" target="_blank" rel="noreferrer" aria-label="SOMA Sanctuary"></a>
+          <button type="button" class="kiosk-red-hit kiosk-red-return" id="kiosk-red-return" aria-hidden="true" tabindex="-1"></button>
+          <button type="button" class="kiosk-red-hit kiosk-red-bullet" id="kiosk-red-bullet" aria-hidden="true" tabindex="-1"></button>
+        </span>
+      </div>
       <div class="kiosk-top-end">
         <p class="kiosk-install" id="safari-hint" hidden>Share → Add to Home Screen, then Guided Access.</p>
         <button type="button" class="kiosk-learn" id="learn-more">Learn more</button>
@@ -165,6 +244,17 @@
             <input id="phone" name="phone" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="10-digit number" enterkeyhint="done" required />
           </div>
           <div class="kiosk-pick">
+            <div id="experience-block" hidden>
+              <p class="kiosk-legend">Experience</p>
+              <div class="kiosk-chips exp" id="experience-chips"></div>
+              <div class="kiosk-red-copy" id="red-copy" hidden>
+                <h2>SOMATIC RETURN: RED</h2>
+                <p>An impact-based sensory experience by Soma Sanctuary.</p>
+                <p>RED explores a more intense pathway to Somatic Return through deliberate, controlled percussive touch using leather implements. By shifting the body's sensory focus, the experience is designed to interrupt habitual patterns of tension and attention, creating an opportunity for heightened present-moment awareness and a different relationship to bodily sensation.</p>
+                <p class="kiosk-red-consent">The experience is consent-led, individually calibrated, and grounded in clear communication between practitioner and participant.</p>
+                <p>Same method. Different intensity.</p>
+              </div>
+            </div>
             <p class="kiosk-legend">Session</p>
             <div class="kiosk-chips" id="session-chips"></div>
             <p class="kiosk-price" id="price-note">$3 a minute</p>
@@ -218,6 +308,7 @@
     const kioskFoot = document.getElementById("kiosk-foot");
     let pricePerMinute = 3;
     let defaultSession = "15";
+    let redUnlocked = false;
 
     function isStandalone() {
       return (
@@ -279,6 +370,42 @@
       });
     }
 
+    function selectedExperience() {
+      if (!redUnlocked) return "standard";
+      return selectedValue("experience") || "standard";
+    }
+
+    function syncRedCopy() {
+      const copy = document.getElementById("red-copy");
+      if (!copy) return;
+      copy.hidden = !(redUnlocked && selectedExperience() === "red");
+    }
+
+    function unlockRed(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const block = document.getElementById("experience-block");
+      const wasUnlocked = redUnlocked;
+      redUnlocked = true;
+      if (block) block.hidden = false;
+      if (!wasUnlocked) {
+        const standard = document.querySelector('input[name="experience"][value="standard"]');
+        if (standard) standard.checked = true;
+      }
+      syncRedCopy();
+    }
+
+    function lockRed() {
+      redUnlocked = false;
+      const block = document.getElementById("experience-block");
+      if (block) block.hidden = true;
+      const standard = document.querySelector('input[name="experience"][value="standard"]');
+      if (standard) standard.checked = true;
+      syncRedCopy();
+    }
+
     function showJoin({ focusName = false } = {}) {
       aboutView.classList.add("hidden");
       resultView.classList.add("hidden");
@@ -310,6 +437,7 @@
       if (session) session.checked = true;
       const firstPay = document.querySelector('input[name="payment"]');
       if (firstPay) firstPay.checked = true;
+      lockRed();
       updatePrice();
       checkForm.classList.add("hidden");
       checkOut.textContent = "";
@@ -336,8 +464,19 @@
         (meta.payments || [])[0] || "",
         (p) => p
       );
+      renderChips(
+        document.getElementById("experience-chips"),
+        ["standard", "red"],
+        "experience",
+        "standard",
+        (v) => (v === "red" ? "RED" : "Somatic Return")
+      );
+      const redChip = document.querySelector('label[for="experience-red"]');
+      if (redChip) redChip.classList.add("kiosk-chip-red");
       document.getElementById("session-chips").addEventListener("change", updatePrice);
+      document.getElementById("experience-chips").addEventListener("change", syncRedCopy);
       updatePrice();
+      syncRedCopy();
     }
 
     document.getElementById("name").addEventListener("keydown", (e) => {
@@ -371,6 +510,7 @@
         phone: document.getElementById("phone").value,
         session_minutes: sessionMinutes,
         payment,
+        experience: selectedExperience(),
       };
       try {
         const res = await fetch("/api/join", {
@@ -446,6 +586,7 @@
       if (saverOn) return;
       saverOn = true;
       window.clearTimeout(idleTimer);
+      lockRed();
       saverEl.hidden = false;
       saverEl.setAttribute("aria-hidden", "false");
     }
@@ -477,6 +618,13 @@
       showSaver();
     });
     moteEl.addEventListener("click", consume);
+
+    ["kiosk-red-return", "kiosk-red-bullet"].forEach((id) => {
+      const hit = document.getElementById(id);
+      if (!hit) return;
+      hit.addEventListener("pointerdown", unlockRed);
+      hit.addEventListener("click", consume);
+    });
 
     saverEl.addEventListener("pointerdown", consume, true);
     saverEl.addEventListener("pointerup", consume, true);

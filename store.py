@@ -190,13 +190,22 @@ def attach_estimates(state: dict, at: datetime | None = None) -> list[dict]:
     return enriched
 
 
-def add_client(state: dict, name: str, phone: str, session_minutes: int, payment: str) -> dict:
+def add_client(
+    state: dict,
+    name: str,
+    phone: str,
+    session_minutes: int,
+    payment: str,
+    experience: str = "standard",
+) -> dict:
+    kind = "red" if str(experience or "").strip().lower() == "red" else "standard"
     client = {
         "id": uuid.uuid4().hex,
         "name": name.strip(),
         "phone": phone,
         "session_minutes": session_minutes,
         "payment": payment,
+        "experience": kind,
         "status": "waiting",
         "joined_at": now().isoformat(),
         "finished_at": None,
