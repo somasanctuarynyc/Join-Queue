@@ -608,6 +608,7 @@ body.is-standalone .kiosk-install,
 .kiosk-install[hidden],
 .kiosk-more[hidden],
 .kiosk-learn[hidden],
+.kiosk-red-jump[hidden],
 .kiosk-foot[hidden] {
   display: none !important;
 }

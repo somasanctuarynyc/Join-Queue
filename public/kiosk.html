@@ -182,97 +182,95 @@
       border-color: #ff4d6d;
       box-shadow: 0 0 22px rgba(177, 15, 36, 0.45);
     }
-    .kiosk-red-copy {
-      margin: 0 0 20px;
-      max-height: min(30vh, 260px);
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      padding-right: 8px;
-    }
-    .kiosk-red-copy h2 {
-      margin: 0 0 10px;
-      color: #ff4d6d;
-      font-size: clamp(0.92rem, 1.6vw, 1.12rem);
-    }
-    .kiosk-red-copy p {
-      margin: 0 0 0.75em;
-      color: #d8cfd0;
-      font-size: clamp(0.95rem, 1.5vw, 1.08rem);
-      line-height: 1.45;
-      font-weight: 400;
-      max-width: none;
-    }
-    .kiosk-red-copy p.kiosk-red-consent {
-      color: var(--ink);
-    }
-    .kiosk-red-copy p:last-child { margin-bottom: 0; }
-    button.kiosk-about-red-jump {
-      display: inline-flex;
-      align-self: flex-start;
-      margin: 0 0 18px;
-      padding: 0;
-      border: 0;
-      border-radius: 0;
+    button.kiosk-red-jump {
+      width: auto;
       min-width: 0;
-      min-height: 0;
-      background: transparent;
-      color: #ff4d6d;
+      min-height: 48px;
+      margin: 0;
+      padding: 10px 18px;
+      border: 1px solid rgba(255, 77, 109, 0.55);
+      border-radius: 999px;
+      background: #000;
+      color: #e36b7a;
       cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-      box-shadow: none;
-      filter: none;
       font-family: var(--font-display);
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      font-size: clamp(0.92rem, 1.6vw, 1.12rem);
+      font-size: 0.86rem;
+      box-shadow: none;
+      filter: none;
     }
-    button.kiosk-about-red-jump:hover,
-    button.kiosk-about-red-jump:hover:not(:disabled),
-    button.kiosk-about-red-jump:focus,
-    button.kiosk-about-red-jump:focus-visible {
-      background: transparent;
-      color: #ff6b84;
+    button.kiosk-red-jump:hover,
+    button.kiosk-red-jump:hover:not(:disabled),
+    button.kiosk-red-jump:focus,
+    button.kiosk-red-jump:focus-visible {
+      color: #ff8a9a;
+      border-color: #ff4d6d;
+      background: #000;
       box-shadow: none;
       filter: none;
       outline: none;
     }
-    button.kiosk-about-red-jump[hidden] { display: none !important; }
-    .kiosk-about-red {
-      margin: 28px 0 0;
-      padding: 22px 20px 20px;
-      max-width: 38rem;
-      border: 1px solid rgba(255, 77, 109, 0.32);
-      border-left: 3px solid #ff4d6d;
-      background: rgba(177, 15, 36, 0.08);
+    .kiosk-about-tabs {
+      display: grid;
+      grid-template-columns: 1.4fr 0.8fr;
+      gap: 12px;
+      margin: 0 0 22px;
+    }
+    .kiosk-about-tab {
+      min-height: 56px;
+      margin: 0;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--ink);
       cursor: pointer;
+      font-family: var(--font-display);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+      box-shadow: none;
+      filter: none;
     }
-    .kiosk-about-red[hidden] { display: none !important; }
-    .kiosk-about-red.is-selected {
+    .kiosk-about-tab:hover,
+    .kiosk-about-tab:hover:not(:disabled),
+    .kiosk-about-tab:focus,
+    .kiosk-about-tab:focus-visible {
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: none;
+      filter: none;
+      outline: none;
+    }
+    .kiosk-about-tab.is-on {
+      background: var(--cyan);
+      color: #001016;
+      border-color: var(--cyan);
+      box-shadow: var(--glow);
+    }
+    .kiosk-about-tab-red.is-on,
+    .kiosk-about-tab-red.is-on:hover,
+    .kiosk-about-tab-red.is-on:focus-visible {
+      background: #b10f24;
+      color: #fff;
       border-color: #ff4d6d;
-      box-shadow: 0 0 22px rgba(177, 15, 36, 0.35);
+      box-shadow: 0 0 18px rgba(177, 15, 36, 0.35);
     }
-    .kiosk-about-red h2 {
-      margin: 0 0 12px;
+    .kiosk-about-pane[hidden],
+    .kiosk-about-tabs[hidden],
+    .kiosk-red-jump[hidden] {
+      display: none !important;
+    }
+    .kiosk-about-pane h2 {
+      margin: 0 0 0.7em;
       color: #ff4d6d;
       font-family: var(--font-display);
-      font-weight: 500;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      font-size: clamp(0.98rem, 1.7vw, 1.18rem);
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
     }
-    .kiosk-about-red p {
-      margin: 0 0 0.85em;
-      max-width: none;
-      color: #d8cfd0;
-      font-size: clamp(1.12rem, 2vw, 1.38rem);
-      line-height: 1.5;
-      font-weight: 400;
-    }
-    .kiosk-about-red p.kiosk-red-consent { color: var(--ink); }
-    .kiosk-about-red p:last-child { margin-bottom: 0; }
-    @media (max-width: 920px), (orientation: portrait) {
-      .kiosk-about-red { max-width: none; }
+    .kiosk-about-pane p.kiosk-red-consent {
+      color: var(--ink);
     }
   </style>
 </head>
@@ -298,6 +296,7 @@
       <div class="kiosk-top-end">
         <p class="kiosk-install" id="safari-hint" hidden>Share → Add to Home Screen, then Guided Access.</p>
         <button type="button" class="kiosk-learn" id="learn-more">Learn more</button>
+        <button type="button" class="kiosk-red-jump" id="red-jump" hidden>RED</button>
         <button type="button" class="kiosk-more" id="about-back" hidden>Back</button>
       </div>
     </div>
@@ -315,13 +314,6 @@
             <div id="experience-block" hidden>
               <p class="kiosk-legend">Experience</p>
               <div class="kiosk-chips exp" id="experience-chips"></div>
-              <div class="kiosk-red-copy" id="red-copy" hidden>
-                <h2>SOMATIC RETURN: RED</h2>
-                <p>An impact-based sensory experience by Soma Sanctuary.</p>
-                <p>RED explores a more intense pathway to Somatic Return through deliberate, controlled percussive touch using leather implements. By shifting the body's sensory focus, the experience is designed to interrupt habitual patterns of tension and attention, creating an opportunity for heightened present-moment awareness and a different relationship to bodily sensation.</p>
-                <p class="kiosk-red-consent">The experience is consent-led, individually calibrated, and grounded in clear communication between practitioner and participant.</p>
-                <p>Same method. Different intensity.</p>
-              </div>
             </div>
             <p class="kiosk-legend">Session</p>
             <div class="kiosk-chips" id="session-chips"></div>
@@ -339,17 +331,22 @@
     </section>
 
     <section id="about-view" class="kiosk-view kiosk-about hidden">
-      <button type="button" class="kiosk-about-red-jump" id="about-red-jump" hidden>RED</button>
-      <p>I'm Nick, a New York State–licensed and registered Occupational Therapist. I've worked with professional athletic organizations, including the NFL and the New York Triathlon, and today my private practice in Manhattan serves New Yorkers ranging from Broadway performers to patients living with Parkinson's disease.</p>
-      <p>In recent years, I've developed a new modality specifically for nightlife called <span class="kiosk-sr">Somatic Return℠</span>. Its premise is simple: to bring you back into your body, reconnect you with the present moment, and counter the overwhelm that can come with crowded, high-energy social environments.</p>
-      <p>Rather than leaving an event to self-regulate, give yourself 5–10 minutes for a focused session designed to restore a sense of ease, presence, and comfort—so you can get back to the party feeling more like you.</p>
-      <article class="kiosk-about-red" id="about-red" hidden>
+      <div class="kiosk-about-tabs" id="about-tabs" hidden>
+        <button type="button" class="kiosk-about-tab is-on" id="about-tab-standard" data-about="standard">Somatic Return</button>
+        <button type="button" class="kiosk-about-tab kiosk-about-tab-red" id="about-tab-red" data-about="red">RED</button>
+      </div>
+      <div id="about-standard" class="kiosk-about-pane">
+        <p>I'm Nick, a New York State–licensed and registered Occupational Therapist. I've worked with professional athletic organizations, including the NFL and the New York Triathlon, and today my private practice in Manhattan serves New Yorkers ranging from Broadway performers to patients living with Parkinson's disease.</p>
+        <p>In recent years, I've developed a new modality specifically for nightlife called <span class="kiosk-sr">Somatic Return℠</span>. Its premise is simple: to bring you back into your body, reconnect you with the present moment, and counter the overwhelm that can come with crowded, high-energy social environments.</p>
+        <p>Rather than leaving an event to self-regulate, give yourself 5–10 minutes for a focused session designed to restore a sense of ease, presence, and comfort—so you can get back to the party feeling more like you.</p>
+      </div>
+      <div id="about-red" class="kiosk-about-pane" hidden>
         <h2>SOMATIC RETURN: RED</h2>
         <p>An impact-based sensory experience by Soma Sanctuary.</p>
         <p>RED explores a more intense pathway to Somatic Return through deliberate, controlled percussive touch using leather implements. By shifting the body's sensory focus, the experience is designed to interrupt habitual patterns of tension and attention, creating an opportunity for heightened present-moment awareness and a different relationship to bodily sensation.</p>
         <p class="kiosk-red-consent">The experience is consent-led, individually calibrated, and grounded in clear communication between practitioner and participant.</p>
         <p>Same method. Different intensity.</p>
-      </article>
+      </div>
     </section>
 
     <section id="result-view" class="kiosk-view kiosk-result hidden">
@@ -380,6 +377,7 @@
     const checkForm = document.getElementById("check-form");
     const checkOut = document.getElementById("check-out");
     const learnMoreBtn = document.getElementById("learn-more");
+    const redJumpBtn = document.getElementById("red-jump");
     const aboutBackBtn = document.getElementById("about-back");
     const kioskFoot = document.getElementById("kiosk-foot");
     let pricePerMinute = 3;
@@ -451,17 +449,41 @@
       return selectedValue("experience") || "standard";
     }
 
-    function syncRedCopy() {
-      const copy = document.getElementById("red-copy");
-      const aboutRed = document.getElementById("about-red");
-      const aboutJump = document.getElementById("about-red-jump");
-      const redOn = redUnlocked && selectedExperience() === "red";
-      if (copy) copy.hidden = !redOn;
-      if (aboutJump) aboutJump.hidden = !redUnlocked;
-      if (aboutRed) {
-        aboutRed.hidden = !redUnlocked;
-        aboutRed.classList.toggle("is-selected", redOn);
+    function setExperience(value) {
+      const radio = document.querySelector(`input[name="experience"][value="${value}"]`);
+      if (radio) radio.checked = true;
+    }
+
+    function setAboutSection(section) {
+      const wantRed = redUnlocked && section === "red";
+      const standardPane = document.getElementById("about-standard");
+      const redPane = document.getElementById("about-red");
+      const tabStd = document.getElementById("about-tab-standard");
+      const tabRed = document.getElementById("about-tab-red");
+      if (standardPane) standardPane.hidden = wantRed;
+      if (redPane) redPane.hidden = !wantRed;
+      if (tabStd) tabStd.classList.toggle("is-on", !wantRed);
+      if (tabRed) tabRed.classList.toggle("is-on", wantRed);
+      if (redUnlocked) setExperience(wantRed ? "red" : "standard");
+    }
+
+    function syncRedUi() {
+      const block = document.getElementById("experience-block");
+      const tabs = document.getElementById("about-tabs");
+      if (block) block.hidden = !redUnlocked;
+      if (tabs) tabs.hidden = !redUnlocked;
+      if (!redUnlocked) {
+        setExperience("standard");
+        setAboutSection("standard");
+      } else {
+        setAboutSection(selectedExperience());
       }
+      syncRedJump();
+    }
+
+    function syncRedJump() {
+      if (!redJumpBtn) return;
+      redJumpBtn.hidden = !redUnlocked || joinView.classList.contains("hidden");
     }
 
     function unlockRed(e) {
@@ -469,35 +491,15 @@
         e.preventDefault();
         e.stopPropagation();
       }
-      const block = document.getElementById("experience-block");
       const wasUnlocked = redUnlocked;
       redUnlocked = true;
-      if (block) block.hidden = false;
-      if (!wasUnlocked) {
-        const standard = document.querySelector('input[name="experience"][value="standard"]');
-        if (standard) standard.checked = true;
-      }
-      syncRedCopy();
-      if (!aboutView.classList.contains("hidden")) {
-        const aboutRed = document.getElementById("about-red");
-        if (aboutRed) aboutRed.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      if (!wasUnlocked) setExperience("standard");
+      syncRedUi();
     }
 
     function lockRed() {
       redUnlocked = false;
-      const block = document.getElementById("experience-block");
-      if (block) block.hidden = true;
-      const standard = document.querySelector('input[name="experience"][value="standard"]');
-      if (standard) standard.checked = true;
-      syncRedCopy();
-    }
-
-    function selectRedExperience() {
-      if (!redUnlocked) return;
-      const red = document.querySelector('input[name="experience"][value="red"]');
-      if (red) red.checked = true;
-      syncRedCopy();
+      syncRedUi();
     }
 
     function showJoin({ focusName = false } = {}) {
@@ -511,10 +513,13 @@
       errorEl.classList.add("hidden");
       errorEl.textContent = "";
       joinBtn.disabled = false;
+      syncRedJump();
       if (focusName) document.getElementById("name").focus();
     }
 
-    function showAbout() {
+    function showAbout(section) {
+      const pane = redUnlocked ? (section || selectedExperience()) : "standard";
+      setAboutSection(pane);
       joinView.classList.add("hidden");
       resultView.classList.add("hidden");
       aboutView.classList.remove("hidden");
@@ -523,6 +528,7 @@
       aboutBackBtn.hidden = false;
       kioskFoot.hidden = true;
       aboutView.scrollTop = 0;
+      syncRedJump();
     }
 
     function resetForNextGuest() {
@@ -568,9 +574,11 @@
       const redChip = document.querySelector('label[for="experience-red"]');
       if (redChip) redChip.classList.add("kiosk-chip-red");
       document.getElementById("session-chips").addEventListener("change", updatePrice);
-      document.getElementById("experience-chips").addEventListener("change", syncRedCopy);
+      document.getElementById("experience-chips").addEventListener("change", () => {
+        setAboutSection(selectedExperience());
+      });
       updatePrice();
-      syncRedCopy();
+      syncRedUi();
     }
 
     document.getElementById("name").addEventListener("keydown", (e) => {
@@ -580,13 +588,14 @@
       }
     });
 
-    learnMoreBtn.addEventListener("click", showAbout);
+    learnMoreBtn.addEventListener("click", () => showAbout());
+    redJumpBtn.addEventListener("click", () => showAbout("red"));
     aboutBackBtn.addEventListener("click", () => showJoin());
-    document.getElementById("about-red-jump").addEventListener("click", () => {
-      const aboutRed = document.getElementById("about-red");
-      if (aboutRed) aboutRed.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("about-tabs").addEventListener("click", (e) => {
+      const tab = e.target.closest("[data-about]");
+      if (!tab || !redUnlocked) return;
+      setAboutSection(tab.getAttribute("data-about"));
     });
-    document.getElementById("about-red").addEventListener("click", selectRedExperience);
 
     joinForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -639,6 +648,7 @@
         learnMoreBtn.hidden = true;
         aboutBackBtn.hidden = true;
         kioskFoot.hidden = false;
+        syncRedJump();
       } catch {
         errorEl.textContent = "Could not join. Check the connection and try again.";
         errorEl.classList.remove("hidden");
