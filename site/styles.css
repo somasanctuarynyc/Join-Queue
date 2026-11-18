@@ -135,7 +135,6 @@ h1, h2, h3, p { margin: 0; }
   right: -3%;
   width: min(52vw, 980px);
   mix-blend-mode: screen;
-  pointer-events: none;
   transform: rotate(var(--stamp-tilt));
   transform-origin: center;
 }
@@ -180,6 +179,30 @@ h1, h2, h3, p { margin: 0; }
 }
 .restore { color: var(--restore); }
 .return { color: var(--return); }
+a.return,
+a.status-red {
+  text-decoration: none;
+}
+a.return:hover,
+a.return:focus-visible,
+a.status-red:hover,
+a.status-red:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+a.hero-stamp,
+a.footer-stamp { color: inherit; }
+a.hero-stamp img,
+a.footer-stamp img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+a.hero-stamp:focus-visible,
+a.footer-stamp:focus-visible {
+  outline: 2px solid var(--return);
+  outline-offset: 4px;
+}
 .hero-kicker {
   margin-top: 1.7rem;
   font-family: var(--text);
@@ -713,4 +736,66 @@ h1, h2, h3, p { margin: 0; }
   .btn-ghost { min-width: 250px; }
   .about-soma { letter-spacing: 0.28em; text-indent: 0.28em; font-size: 2rem; }
   .about p { font-size: 0.92rem; }
+}
+
+.red-page {
+  background: #000;
+  min-height: calc(100vh - 92px);
+  display: grid;
+  align-items: center;
+  padding: clamp(3.5rem, 9vw, 7.5rem) clamp(1.25rem, 6vw, 6rem) 4.5rem;
+}
+.red-copy {
+  width: min(760px, 100%);
+  margin: 0 auto;
+}
+.red-kicker {
+  margin: 0;
+  font-family: var(--mono);
+  color: var(--return);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+}
+.red-page h1 {
+  margin: 0.35rem 0 0.8rem;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(4.8rem, 14vw, 8.5rem);
+  letter-spacing: 0.16em;
+  line-height: 0.85;
+  color: var(--return);
+}
+.red-lead {
+  margin: 0 0 1.6rem;
+  font-family: var(--display);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: clamp(1rem, 2.2vw, 1.35rem);
+}
+.red-page p {
+  font-family: var(--text);
+  font-size: 1.12rem;
+  line-height: 1.6;
+  max-width: 38rem;
+}
+.red-note {
+  margin-top: 1.4rem;
+  border-left: 2px solid var(--return);
+  padding-left: 1rem;
+}
+.red-home {
+  display: inline-block;
+  margin-top: 2.2rem;
+  color: var(--cyan);
+  font-family: var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+.red-home:hover,
+.red-home:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
 }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>document.documentElement.classList.add("js")</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RED | Soma Sanctuary</title>
+  <meta name="description" content="RED is a more intense, consent-led path through Somatic Return. Same method. Different intensity.">
+  <link rel="icon" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;700&family=Tektur:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo-link" href="index.html" aria-label="Soma Sanctuary home">
+      <img class="logo" src="assets/logo.png" alt="Soma Sanctuary">
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Site">
+      <a href="index.html">Home</a>
+      <a href="https://join-queue.onrender.com/join">Join Queue</a>
+      <a href="https://join-queue.onrender.com/bookings">Inquiry Services Page</a>
+    </nav>
+  </header>
+
+  <main class="red-page">
+    <article class="red-copy">
+      <p class="red-kicker">Somatic Return</p>
+      <h1>RED</h1>
+      <p class="red-lead">Same method. Different intensity.</p>
+      <p>There is the session you came for. Then there is this.</p>
+      <p>RED is a more intense path through Somatic Return. The touch is percussive and deliberate, with leather implements, and it stays in your hands. It is meant to catch the body’s attention, interrupt a stuck pattern of tension, and bring you into the moment with the volume up.</p>
+      <p class="red-note">You agree to every part of it. The intensity is set with you, adjusted as you go, and kept in plain conversation with your practitioner.</p>
+      <p>You will not find this in the menu. You found it because you touched the red.</p>
+      <a class="red-home" href="index.html">Back to the sanctuary</a>
+    </article>
+  </main>
+
+  <script>
+    const toggle = document.querySelector(".nav-toggle");
+    const nav = document.querySelector(".site-nav");
+    toggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    nav.addEventListener("click", (event) => {
+      if (event.target.closest("a")) {
+        nav.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  </script>
+</body>
+</html>
