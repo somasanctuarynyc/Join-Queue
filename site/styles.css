@@ -759,14 +759,30 @@ a.footer-stamp:focus-visible {
   width: min(1120px, 82vw);
   left: 30vw;
   top: 42%;
-  transform: translateY(-42%);
+  transform: translateY(-42%) scale(0.8);
+  transform-origin: center center;
   opacity: 0.58;
   mix-blend-mode: screen;
   pointer-events: none;
   max-width: none;
-  height: auto;
   -webkit-mask-image: radial-gradient(ellipse 74% 78% at 62% 48%, #000 36%, transparent 78%);
   mask-image: radial-gradient(ellipse 74% 78% at 62% 48%, #000 36%, transparent 78%);
+}
+.red-still img {
+  display: block;
+  width: 124%;
+  max-width: none;
+  height: auto;
+  margin-left: -12%;
+  animation: red-drift 42s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes red-drift {
+  from { transform: translate3d(0, 0, 0) scale(1.02); }
+  to { transform: translate3d(-7%, 4%, 0) scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .red-still img { animation: none; }
 }
 .red-kicker {
   margin: 0;
@@ -809,7 +825,8 @@ a.footer-stamp:focus-visible {
     width: 175%;
     left: -38%;
     top: 2.5rem;
-    transform: none;
+    transform: scale(0.8);
+    transform-origin: center center;
     opacity: 0.62;
     -webkit-mask-image: radial-gradient(ellipse 52% 48% at 50% 46%, #000 28%, transparent 74%);
     mask-image: radial-gradient(ellipse 52% 48% at 50% 46%, #000 28%, transparent 74%);
