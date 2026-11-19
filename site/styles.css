@@ -743,11 +743,30 @@ a.footer-stamp:focus-visible {
   min-height: calc(100vh - 92px);
   display: grid;
   align-items: center;
+  position: relative;
+  overflow: hidden;
   padding: clamp(3.5rem, 9vw, 7.5rem) clamp(1.25rem, 6vw, 6rem) 4.5rem;
 }
 .red-copy {
-  width: min(760px, 100%);
-  margin: 0 auto;
+  width: min(640px, 100%);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+.red-still {
+  position: absolute;
+  z-index: 0;
+  width: min(1120px, 82vw);
+  left: 30vw;
+  top: 42%;
+  transform: translateY(-42%);
+  opacity: 0.58;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  max-width: none;
+  height: auto;
+  -webkit-mask-image: radial-gradient(ellipse 74% 78% at 62% 48%, #000 36%, transparent 78%);
+  mask-image: radial-gradient(ellipse 74% 78% at 62% 48%, #000 36%, transparent 78%);
 }
 .red-kicker {
   margin: 0;
@@ -758,7 +777,7 @@ a.footer-stamp:focus-visible {
   font-size: 0.82rem;
 }
 .red-page h1 {
-  margin: 0.35rem 0 0.8rem;
+  margin: 0.35rem 0 0.35rem;
   font-family: var(--display);
   font-weight: 400;
   font-size: clamp(4.8rem, 14vw, 8.5rem);
@@ -766,12 +785,35 @@ a.footer-stamp:focus-visible {
   line-height: 0.85;
   color: var(--return);
 }
-.red-lead {
-  margin: 0 0 1.6rem;
+.red-word {
   font-family: var(--display);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-size: clamp(1rem, 2.2vw, 1.35rem);
+  letter-spacing: 0.06em;
+  margin-left: 0.55em;
+  margin-right: 0.12em;
+}
+.red-page .red-welcome {
+  margin-top: 1.45rem;
+}
+.red-page .red-acts {
+  margin: 0.35rem 0 0;
+  max-width: 100%;
+  font-family: var(--display);
+  font-size: clamp(1.05rem, 2vw, 1.45rem);
+  letter-spacing: 0.1em;
+  line-height: 1.25;
+}
+@media (max-width: 800px) {
+  .red-copy { width: min(720px, 100%); }
+  .red-still {
+    mix-blend-mode: normal;
+    width: 175%;
+    left: -38%;
+    top: 2.5rem;
+    transform: none;
+    opacity: 0.62;
+    -webkit-mask-image: radial-gradient(ellipse 52% 48% at 50% 46%, #000 28%, transparent 74%);
+    mask-image: radial-gradient(ellipse 52% 48% at 50% 46%, #000 28%, transparent 74%);
+  }
 }
 .red-page p {
   font-family: var(--text);
