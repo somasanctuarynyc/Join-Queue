@@ -814,9 +814,10 @@ body:has(.red-page) {
   margin: 0.35rem 0 0;
   max-width: 100%;
   font-family: var(--display);
-  font-size: clamp(1.05rem, 2vw, 1.45rem);
+  font-size: clamp(0.66rem, 3.9vw, 1.45rem);
   letter-spacing: 0.1em;
   line-height: 1.25;
+  white-space: nowrap;
 }
 @media (max-width: 800px) {
   .red-copy { width: min(720px, 100%); }
