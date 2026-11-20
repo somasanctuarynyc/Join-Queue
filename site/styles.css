@@ -852,6 +852,7 @@ body:has(.red-page) {
   margin-top: 1.4rem;
   border-left: 2px solid var(--return);
   padding-left: 1rem;
+  color: var(--return);
 }
 .red-home {
   display: inline-block;
