@@ -738,13 +738,16 @@ a.footer-stamp:focus-visible {
   .about p { font-size: 0.92rem; }
 }
 
+body:has(.red-page) {
+  padding-bottom: 80vh;
+}
 .red-page {
-  background: #000;
+  background: transparent;
   min-height: calc(100vh - 92px);
   display: grid;
   align-items: center;
   position: relative;
-  overflow: hidden;
+  z-index: 1;
   padding: clamp(3.5rem, 9vw, 7.5rem) clamp(1.25rem, 6vw, 6rem) 4.5rem;
 }
 .red-copy {
@@ -754,35 +757,26 @@ a.footer-stamp:focus-visible {
   z-index: 1;
 }
 .red-still {
-  position: absolute;
+  position: fixed;
+  inset: 0;
   z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.red-still img {
+  position: absolute;
+  display: block;
   width: min(1120px, 82vw);
+  max-width: none;
+  height: auto;
   left: 30vw;
-  top: 42%;
+  top: calc(92px + 0.42 * (100vh - 92px) + 10vh);
   transform: translateY(-42%) scale(0.8);
   transform-origin: center center;
   opacity: 0.58;
   mix-blend-mode: screen;
-  pointer-events: none;
-  max-width: none;
   -webkit-mask-image: radial-gradient(ellipse 74% 78% at 62% 48%, #000 36%, transparent 78%);
   mask-image: radial-gradient(ellipse 74% 78% at 62% 48%, #000 36%, transparent 78%);
-}
-.red-still img {
-  display: block;
-  width: 124%;
-  max-width: none;
-  height: auto;
-  margin-left: -12%;
-  animation: red-drift 42s ease-in-out infinite alternate;
-  will-change: transform;
-}
-@keyframes red-drift {
-  from { transform: translate3d(0, 0, 0) scale(1.02); }
-  to { transform: translate3d(-7%, 4%, 0) scale(1.06); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .red-still img { animation: none; }
 }
 .red-kicker {
   margin: 0;
@@ -820,17 +814,20 @@ a.footer-stamp:focus-visible {
 }
 @media (max-width: 800px) {
   .red-copy { width: min(720px, 100%); }
-  .red-still {
+  .red-still img {
     mix-blend-mode: normal;
     width: 175%;
     left: -38%;
-    top: 2.5rem;
+    top: calc(92px + 2.5rem + 10vh);
     transform: scale(0.8);
     transform-origin: center center;
     opacity: 0.62;
     -webkit-mask-image: radial-gradient(ellipse 52% 48% at 50% 46%, #000 28%, transparent 74%);
     mask-image: radial-gradient(ellipse 52% 48% at 50% 46%, #000 28%, transparent 74%);
   }
+}
+@media (max-width: 760px) {
+  .red-still img { top: calc(68px + 2.5rem + 10vh); }
 }
 .red-page p {
   font-family: var(--text);
