@@ -766,17 +766,23 @@ body:has(.red-page) {
 .red-still img {
   position: absolute;
   display: block;
-  width: min(1120px, 82vw);
+  width: max(1120px, calc(1600px - 25vw));
   max-width: none;
   height: auto;
-  left: 30vw;
+  left: min(30vw, calc(78.571vw - 932.57px));
   top: calc(92px + 0.42 * (100vh - 92px) + 10vh);
   transform: translateY(-42%) scale(0.8);
   transform-origin: center center;
   opacity: 0.58;
   mix-blend-mode: screen;
-  -webkit-mask-image: radial-gradient(ellipse 74% 78% at 62% 48%, #000 36%, transparent 78%);
-  mask-image: radial-gradient(ellipse 74% 78% at 62% 48%, #000 36%, transparent 78%);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
+    linear-gradient(to bottom, #000 0%, #000 64%, transparent 94%);
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
+    linear-gradient(to bottom, #000 0%, #000 64%, transparent 94%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }
 .red-kicker {
   margin: 0;
@@ -822,8 +828,14 @@ body:has(.red-page) {
     transform: scale(0.8);
     transform-origin: center center;
     opacity: 0.62;
-    -webkit-mask-image: radial-gradient(ellipse 52% 48% at 50% 46%, #000 28%, transparent 74%);
-    mask-image: radial-gradient(ellipse 52% 48% at 50% 46%, #000 28%, transparent 74%);
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%),
+      linear-gradient(to bottom, #000 0%, #000 62%, transparent 92%);
+    mask-image:
+      linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%),
+      linear-gradient(to bottom, #000 0%, #000 62%, transparent 92%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
   }
 }
 @media (max-width: 760px) {
