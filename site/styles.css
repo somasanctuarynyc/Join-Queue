@@ -848,11 +848,13 @@ body:has(.red-page) {
   line-height: 1.6;
   max-width: 38rem;
 }
-.red-note {
+.red-page .red-note {
   margin-top: 1.4rem;
   border-left: 2px solid var(--return);
   padding-left: 1rem;
   color: var(--return);
+  font-size: clamp(0.68rem, 3.55vw, 1.12rem);
+  white-space: nowrap;
 }
 .red-home {
   display: inline-block;
